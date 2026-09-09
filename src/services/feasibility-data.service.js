@@ -14,96 +14,7 @@ import {
   buildLocationResponse,
 } from "@/utils/location.mapper";
 
-import usersData from "@/data/users.json";
-import businessesData from "@/data/businesses.json";
-
-function getFallbackProfile() {
-  const p = usersData?.profile || {};
-  return {
-    fullName: p.fullName || "Ravi Kumar",
-    availableCapital: p.financial?.availableCapital ?? 500000,
-    income: p.financial?.income ?? 25000,
-    businessExperience: p.experience?.businessExperience || "3-5 years",
-    skills: p.experience?.skills ? p.experience.skills.split(",").map(s => s.trim()) : ["Agriculture", "Supply Chain"],
-    education: p.experience?.education || "B.Com",
-  };
-}
-
-function getFallbackBusiness(businessId) {
-  const b = businessesData?.details || {};
-  return {
-    id: businessId || b.id || "123",
-    name: b.name || "Green Valley Dairy",
-    description: b.description || "Small-scale commercial dairy farm focusing on high-yield milk production.",
-    category: {
-      id: "cat_agri",
-      name: b.category || "Agriculture & Allied",
-      slug: "agriculture-allied",
-      subcategory: b.subcategory || "Dairy Farming",
-    },
-    location: b.location || {
-      state: "Maharashtra",
-      district: "Pune",
-      block: "Khed",
-    },
-    availableMargin: b.capital?.availableMargin ?? 150000,
-    expectedInvestment: b.capital?.expectedInvestment ?? 800000,
-    workingCapital: b.capital?.workingCapital ?? 50000,
-    expectedRevenue: b.operations?.expectedRevenue ?? 45000,
-    expectedPrice: b.operations?.expectedPrice ?? 55,
-    productionQuantity: b.operations?.productionQuantity ?? 30,
-    existingResources: b.resources?.existingResources || "Water connection, grid electricity, 0.5 Acre owned",
-    status: b.status || "Ready",
-  };
-}
-
-function mapBusinessForFeasibility(
-  business,
-  location
-) {
-  return {
-    id: business.id,
-    name: business.name,
-    description: business.description,
-    category: business.category
-      ? {
-          id: business.category.id,
-          name: business.category.name,
-          slug: business.category.slug,
-        }
-      : null,
-    location: location ? buildLocationResponse(location) : business.location,
-    availableMargin: Number(business.availableMargin ?? 150000),
-    existingResources: business.existingResources,
-    expectedRevenue: Number(business.expectedRevenue ?? 45000),
-    status: business.status,
-  };
-}
-
-function mapProfileForFeasibility(
-  profile
-) {
-  if (!profile) {
-    return null;
-  }
-
-  return {
-    availableCapital:
-      profile.availableCapital !== null
-        ? Number(profile.availableCapital)
-        : null,
-    income:
-      profile.income !== null
-        ? Number(profile.income)
-        : null,
-    businessExperience: profile.businessExperience,
-    skills:
-      Array.isArray(profile.skills)
-        ? profile.skills
-        : typeof profile.skills === "string" ? profile.skills.split(",").map(s => s.trim()) : [],
-    education: profile.education,
-  };
-}
+import { userDb, businessDb } from "@/lib/server/jsonDb";
 
 export async function loadFeasibilityData({
   userId,
@@ -113,41 +24,103 @@ export async function loadFeasibilityData({
 }) {
   let business = null;
   let profile = null;
-  let fullLocation = null;
 
-  try {
-    business = await findBusinessByIdAndUserId({
-      businessId,
-      userId,
-    });
-    if (business?.locationId) {
-      try {
-        fullLocation = await findLocationWithParents(business.locationId);
-      } catch (e) {
-        fullLocation = null;
-      }
+  // 1. Check client-provided payload first
+  if (clientBusiness) {
+    business = clientBusiness;
+  }
+  if (clientProfile) {
+    profile = clientProfile;
+  }
+
+  // 2. Query JSON Prototype DB
+  if (!business && businessId) {
+    const jsonBiz = businessDb.getBusinessById(businessId);
+    if (jsonBiz) {
+      business = {
+        id: jsonBiz.id,
+        name: jsonBiz.name || jsonBiz.businessName || "My Rural Enterprise",
+        description: jsonBiz.description || "Micro-enterprise operations.",
+        category: jsonBiz.category,
+        subcategory: jsonBiz.subcategory || "",
+        location: jsonBiz.location || { state: "Uttar Pradesh", district: "Varanasi" },
+        availableMargin: Number(jsonBiz.capital?.availableMargin || 50000),
+        expectedInvestment: Number(jsonBiz.capital?.expectedInvestment || 250000),
+        workingCapital: Number(jsonBiz.capital?.workingCapital || 25000),
+        expectedRevenue: Number(jsonBiz.operations?.expectedRevenue || 30000),
+        expectedPrice: Number(jsonBiz.operations?.expectedPrice || 75),
+        productionQuantity: Number(jsonBiz.operations?.productionQuantity || 100),
+        existingResources: jsonBiz.resources?.existingResources || "Utilities & premises",
+        status: jsonBiz.status || "Ready",
+      };
     }
-  } catch (err) {
-    business = null;
   }
 
-  try {
-    profile = await findProfileByUserId(userId);
-  } catch (err) {
-    profile = null;
+  // If still no business and user exists, fetch user's first business
+  if (!business && userId) {
+    const userBizList = businessDb.getBusinessesByUserId(userId);
+    if (userBizList && userBizList.length > 0) {
+      const jsonBiz = userBizList[0];
+      business = {
+        id: jsonBiz.id,
+        name: jsonBiz.name || jsonBiz.businessName || "My Rural Enterprise",
+        description: jsonBiz.description || "Micro-enterprise operations.",
+        category: jsonBiz.category,
+        subcategory: jsonBiz.subcategory || "",
+        location: jsonBiz.location || { state: "Uttar Pradesh", district: "Varanasi" },
+        availableMargin: Number(jsonBiz.capital?.availableMargin || 50000),
+        expectedInvestment: Number(jsonBiz.capital?.expectedInvestment || 250000),
+        workingCapital: Number(jsonBiz.capital?.workingCapital || 25000),
+        expectedRevenue: Number(jsonBiz.operations?.expectedRevenue || 30000),
+        expectedPrice: Number(jsonBiz.operations?.expectedPrice || 75),
+        productionQuantity: Number(jsonBiz.operations?.productionQuantity || 100),
+        existingResources: jsonBiz.resources?.existingResources || "Utilities & premises",
+        status: jsonBiz.status || "Ready",
+      };
+    }
   }
 
-  const resolvedBusiness = clientBusiness
-    ? clientBusiness
-    : business
-    ? mapBusinessForFeasibility(business, fullLocation)
-    : getFallbackBusiness(businessId);
+  // 3. Query JSON Profile
+  if (!profile && userId) {
+    const user = userDb.findUserById(userId);
+    if (user) {
+      profile = {
+        fullName: user.name || user.profile?.fullName || "Entrepreneur",
+        availableCapital: Number(user.profile?.financial?.availableCapital || 100000),
+        income: Number(user.profile?.financial?.income || 20000),
+        businessExperience: user.profile?.experience?.businessExperience || "1-3 years",
+        skills: user.profile?.experience?.skills || ["Local Enterprise"],
+        education: user.profile?.experience?.education || "Secondary",
+      };
+    }
+  }
 
-  const resolvedProfile = clientProfile
-    ? clientProfile
-    : profile
-    ? mapProfileForFeasibility(profile)
-    : getFallbackProfile();
+  // Default fallback if brand new visitor with no account
+  const resolvedBusiness = business || {
+    id: businessId || "biz_new",
+    name: "Proposed Micro-Enterprise",
+    description: "Rural enterprise plan.",
+    category: "General Enterprise",
+    subcategory: "Local Services",
+    location: { state: "Uttar Pradesh", district: "Varanasi" },
+    availableMargin: 50000,
+    expectedInvestment: 250000,
+    workingCapital: 25000,
+    expectedRevenue: 30000,
+    expectedPrice: 75,
+    productionQuantity: 100,
+    existingResources: "Local premises & power connection",
+    status: "Ready",
+  };
+
+  const resolvedProfile = profile || {
+    fullName: "Entrepreneur",
+    availableCapital: 50000,
+    income: 20000,
+    businessExperience: "1-2 years",
+    skills: ["General Enterprise"],
+    education: "Secondary",
+  };
 
   return {
     business: resolvedBusiness,

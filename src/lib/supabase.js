@@ -7,7 +7,7 @@ class MockSupabaseAuth {
   async signUp({ email, password }) {
     return {
       data: {
-        user: { id: "user-ent-001", email, user_metadata: { name: "Ravi Kumar" } },
+        user: { id: "user-ent-001", email, user_metadata: { name: (email ? email.split("@")[0] : "Entrepreneur") } },
         session: { access_token: "demo-token", refresh_token: "demo-refresh" },
       },
       error: null,
@@ -17,7 +17,7 @@ class MockSupabaseAuth {
   async signInWithPassword({ email, password }) {
     return {
       data: {
-        user: { id: "user-ent-001", email, user_metadata: { name: "Ravi Kumar" } },
+        user: { id: "user-ent-001", email, user_metadata: { name: (email ? email.split("@")[0] : "Entrepreneur") } },
         session: { access_token: "demo-token", refresh_token: "demo-refresh" },
       },
       error: null,
@@ -30,7 +30,7 @@ class MockSupabaseAuth {
         user: {
           id: "user-ent-001",
           email: "ravi@example.com",
-          user_metadata: { name: "Ravi Kumar" },
+          user_metadata: { name: (email ? email.split("@")[0] : "Entrepreneur") },
         },
       },
       error: null,

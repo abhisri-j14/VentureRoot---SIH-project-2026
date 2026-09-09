@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "description": "Structured configuration and schema contracts for Google Gemini AI integrations across VentureRoot",
+  "description": "Comprehensive structured configuration and schema contracts for Google Gemini AI integrations across VentureRoot",
   "systemPersona": "You are VentureRoot AI Engine, an expert rural enterprise, micro-business consultant, and financial feasibility advisor in India (built for Smart India Hackathon).",
   "guardrails": {
     "noFinancialHallucinations": "All financial calculations (project cost, margin 10%, loan 90%, reducing-balance EMI schedule, interest rates) must be computed mathematically in deterministic code. Gemini provides qualitative narrative explanations and must never invent conflicting numbers.",
@@ -11,44 +11,165 @@
     "feasibility": {
       "endpoint": "/api/v1/feasibility/[businessId]/generate",
       "description": "Comprehensive market reach, local opportunity, competitor density, SWOT, risk factors, and unit pricing.",
+      "frontendComponent": "src/app/(dashboard)/business/[id]/feasibility/page.tsx",
+      "persistenceKey": "business.feasibility",
       "requiredContext": [
         "business.name",
         "business.category",
         "business.location",
-        "business.capital",
-        "business.operations",
+        "business.capital.availableMargin",
+        "business.capital.expectedInvestment",
+        "business.operations.expectedRevenue",
+        "business.operations.expectedPrice",
         "profile.fullName",
-        "profile.experience",
-        "profile.skills"
+        "profile.experience.businessExperience",
+        "profile.experience.skills"
       ],
-      "outputSections": [
-        "market",
-        "opportunity",
-        "competition",
-        "swot",
-        "risks",
-        "pricing"
-      ]
+      "systemInstruction": "You are an expert rural business feasibility analyst in India. Analyze market reach, competitor density, SWOT, risk factors, and unit pricing for micro-enterprises. Output strictly valid JSON.",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "market",
+          "opportunity",
+          "competition",
+          "swot",
+          "risks",
+          "pricing"
+        ],
+        "properties": {
+          "market": {
+            "type": "object",
+            "required": [
+              "reach",
+              "demandIndicators",
+              "localObservations",
+              "customerSegments",
+              "marketSizeValue",
+              "marketTrends",
+              "confidence",
+              "why"
+            ]
+          },
+          "opportunity": {
+            "type": "object",
+            "required": [
+              "summary",
+              "demandOpportunity",
+              "unmetNeed",
+              "localBusinessOpportunity",
+              "keyDrivers",
+              "confidence"
+            ]
+          },
+          "competition": {
+            "type": "object",
+            "required": [
+              "overview",
+              "competitors",
+              "observations"
+            ]
+          },
+          "swot": {
+            "type": "object",
+            "required": [
+              "strengths",
+              "weaknesses",
+              "opportunities",
+              "threats"
+            ]
+          },
+          "risks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "category",
+                "severity",
+                "explanation",
+                "potentialImpact",
+                "mitigationAdvisory"
+              ]
+            }
+          },
+          "pricing": {
+            "type": "object",
+            "required": [
+              "expectedLocalPrice",
+              "observedMarketPrice",
+              "priceRange",
+              "marketValue",
+              "observations",
+              "pricingFactors"
+            ]
+          }
+        }
+      },
+      "fallback": "Domain-grounded heuristic analysis customized to user's sector, capital, and district."
     },
     "advisor": {
       "endpoint": "/api/v1/ai/advisor/chat",
       "description": "Conversational advisory with factual citations and confidence scoring for rural entrepreneurs.",
+      "frontendComponent": "src/features/advisor/components/ChatWindow.tsx",
+      "persistenceKey": "session.conversationState",
       "requiredContext": [
         "profile.fullName",
         "profile.location",
         "profile.availableCapital",
+        "profile.skills",
         "business.name",
         "business.category",
-        "business.location"
+        "business.location",
+        "business.capital"
       ],
-      "outputSections": [
-        "reply",
-        "evidence"
-      ]
+      "systemInstruction": "You are VentureRoot AI Business Advisor, an expert rural enterprise consultant in India. Reference PMEGP, MUDRA, Stand-Up India, PMFME, and NABARD. Output strictly JSON with reply and evidence.",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "reply",
+          "evidence"
+        ],
+        "properties": {
+          "reply": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "object",
+            "required": [
+              "sources",
+              "type",
+              "confidence"
+            ],
+            "properties": {
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "FACT",
+                  "ESTIMATE",
+                  "PREDICTION"
+                ]
+              },
+              "confidence": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "fallback": "Factual District Industries Centre (DIC) and PMEGP guidance with 80% confidence."
     },
     "financeExplanation": {
       "endpoint": "/api/v1/ai/finance/explain",
-      "description": "Qualitative explanation of deterministic project cost, margin safety, debt service ratio, and working capital strategy.",
+      "description": "Qualitative narrative explaining deterministic math (debt service ratio, margin safety, working capital buffer).",
+      "frontendComponent": "src/app/(dashboard)/business/[id]/finance/page.tsx",
+      "persistenceKey": "business.financialExplanation",
       "requiredContext": [
         "business.name",
         "plan.projectCost",
@@ -57,63 +178,280 @@
         "plan.monthlyEMI",
         "plan.schemeResult"
       ],
-      "outputSections": [
-        "summary",
-        "points"
-      ]
+      "systemInstruction": "You are an expert financial consultant for Indian rural enterprises. Explain this deterministic financial plan in clear, practical language without changing any numbers. Output strictly valid JSON.",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "summary",
+          "points"
+        ],
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "title",
+                "explanation"
+              ]
+            }
+          }
+        }
+      },
+      "fallback": "Mathematical calculations continue displaying uninterrupted with preliminary guidance notes."
     },
     "roadmap": {
       "endpoint": "/api/v1/ai/roadmap/generate",
-      "description": "Tailored 4-phase chronological action roadmap with regulatory compliance, procurement, and launch milestones.",
+      "description": "Tailored 6-milestone chronological action roadmap across 4 launch phases.",
+      "frontendComponent": "src/app/(dashboard)/business/[id]/roadmap/page.tsx",
+      "persistenceKey": "business.roadmap",
       "requiredContext": [
         "business.name",
         "business.category",
         "business.location",
-        "business.capital",
-        "profile.experience"
+        "business.capital.availableMargin",
+        "profile.experience.businessExperience",
+        "profile.experience.skills"
       ],
-      "phases": [
-        "Phase 1: Validation & Scheme Application (Weeks 1-4)",
-        "Phase 2: Licences, Approvals & Banking (Weeks 5-8)",
-        "Phase 3: Setup, Procurement & Trial Run (Weeks 9-14)",
-        "Phase 4: Commercial Launch & Market Linkage (Weeks 15+)"
-      ],
-      "outputSections": [
-        "businessName",
-        "location",
-        "totalEstimatedWeeks",
-        "phases"
-      ]
+      "systemInstruction": "You are an expert rural business launcher and operations strategist in India. Generate a tailored 6-step chronological action roadmap for launching this specific rural business. Output strictly valid JSON.",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "businessId",
+          "businessName",
+          "location",
+          "actions"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "businessId": {
+            "type": "string"
+          },
+          "businessName": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "order",
+                "title",
+                "description",
+                "whatToDo",
+                "expectedOutcome",
+                "timeframe",
+                "priority",
+                "category",
+                "status"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "order": {
+                  "type": "number"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "whatToDo": {
+                  "type": "string"
+                },
+                "expectedOutcome": {
+                  "type": "string"
+                },
+                "timeframe": {
+                  "type": "string"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": [
+                    "HIGH",
+                    "MEDIUM",
+                    "LOW"
+                  ]
+                },
+                "category": {
+                  "type": "string",
+                  "enum": [
+                    "MARKET",
+                    "FINANCE",
+                    "OPERATIONS",
+                    "COMPLIANCE",
+                    "MARKETING",
+                    "SUPPLY",
+                    "OTHER"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "NOT_STARTED",
+                    "IN_PROGRESS",
+                    "COMPLETED"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "fallback": "Deterministic 6-milestone launch plan customized to user enterprise name, location, and category."
     },
     "comparison": {
       "endpoint": "/api/v1/ai/business/compare",
-      "description": "Comparative strategic trade-off analysis between user venture and alternative rural micro-enterprises.",
+      "description": "Comparative strategic trade-off analysis between user venture and alternative rural benchmark opportunities.",
+      "frontendComponent": "src/features/business/components/BusinessComparison.tsx",
+      "persistenceKey": "dynamicallyComputed",
       "requiredContext": [
-        "userBusiness",
+        "userBusiness.name",
+        "userBusiness.category",
+        "userBusiness.capital.availableMargin",
+        "userBusiness.operations.expectedRevenue",
         "benchmarkBusinesses"
       ],
-      "outputSections": [
-        "verdict",
-        "tradeOffSummary",
-        "recommendations"
-      ]
+      "systemInstruction": "You are an expert micro-enterprise viability analyst in India. Provide comparative strategic insight comparing the entrepreneur's active venture against common rural benchmark opportunities. Output strictly valid JSON.",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "verdict",
+          "tradeOffSummary",
+          "keyAdvantages",
+          "recommendations"
+        ],
+        "properties": {
+          "verdict": {
+            "type": "string"
+          },
+          "tradeOffSummary": {
+            "type": "string"
+          },
+          "keyAdvantages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "fallback": "Capital-efficiency and working-capital trade-off heuristic comparison."
     },
     "dashboardBriefing": {
       "endpoint": "/api/v1/ai/dashboard/briefing",
       "description": "Executive morning briefing for active entrepreneur summarizing readiness, immediate next step, and financial tip.",
+      "frontendComponent": "src/app/(dashboard)/dashboard/page.tsx",
+      "persistenceKey": "business.briefing",
       "requiredContext": [
-        "profile.fullName",
+        "user.name",
         "business.name",
-        "business.stage",
+        "business.category",
+        "business.location",
+        "business.capital.availableMargin"
+      ],
+      "systemInstruction": "You are an encouraging rural enterprise advisor. Generate a concise morning briefing card for the entrepreneur's dashboard. Output strictly valid JSON.",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "headline",
+          "readinessAssessment",
+          "priorityAction",
+          "schemeHighlight",
+          "riskAdvisory"
+        ],
+        "properties": {
+          "headline": {
+            "type": "string"
+          },
+          "readinessAssessment": {
+            "type": "string"
+          },
+          "priorityAction": {
+            "type": "string"
+          },
+          "schemeHighlight": {
+            "type": "string"
+          },
+          "riskAdvisory": {
+            "type": "string"
+          }
+        }
+      },
+      "fallback": "Venture readiness assessment highlighting DPR milestone and PMEGP/MUDRA subsidy."
+    },
+    "reports": {
+      "endpoint": "/api/v1/reports/[id]",
+      "description": "Comprehensive bankable enterprise advisory report synthesizing feasibility, finance, and roadmap.",
+      "frontendComponent": "src/app/(dashboard)/reports/[id]/page.tsx",
+      "persistenceKey": "business.report",
+      "requiredContext": [
+        "business.id",
+        "business.name",
+        "business.category",
+        "business.location",
+        "business.feasibility",
         "business.capital"
       ],
-      "outputSections": [
-        "headline",
-        "readinessAssessment",
-        "priorityAction",
-        "schemeHighlight",
-        "riskAdvisory"
-      ]
+      "systemInstruction": "Bankable Detailed Project Report (DPR) synthesis combining deterministic financial plan and feasibility analysis.",
+      "outputSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "businessId",
+          "businessName",
+          "location",
+          "status",
+          "type",
+          "feasibilityData"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "businessId": {
+            "type": "string"
+          },
+          "businessName": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "feasibilityData": {
+            "type": "object"
+          }
+        }
+      },
+      "fallback": "Binds directly to user's registered enterprise details and generated feasibility data."
     }
   }
 }

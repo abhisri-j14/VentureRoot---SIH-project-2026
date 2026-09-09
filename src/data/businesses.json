@@ -1,6 +1,38 @@
 {
   "items": [
     {
+      "id": "biz_1788969218873_rqo65",
+      "userId": "usr_demo_rajesh",
+      "name": "My Rural Enterprise",
+      "businessName": "My Rural Enterprise",
+      "category": "General Enterprise",
+      "subcategory": "",
+      "description": "Micro-enterprise plan.",
+      "stage": "Ideation",
+      "status": "Ready",
+      "location": {
+        "state": "West bengal",
+        "district": "Kolkata"
+      },
+      "capital": {
+        "availableMargin": 50000,
+        "workingCapital": 17500,
+        "expectedInvestment": 125000
+      },
+      "operations": {
+        "expectedRevenue": 40000,
+        "expectedPrice": 75,
+        "productionQuantity": 100
+      },
+      "resources": {
+        "existingResources": "Skills: Sales",
+        "land": "Local premises",
+        "equipment": "Essential processing equipment"
+      },
+      "createdAt": "2026-09-09T15:53:38.874Z",
+      "updatedAt": "2026-09-09T15:53:38.874Z"
+    },
+    {
       "id": "biz_demo_001",
       "userId": "usr_demo_rajesh",
       "name": "Kashi Handloom Weaving Unit",
@@ -34,31 +66,32 @@
     }
   ],
   "details": {
-    "id": "123",
-    "name": "Green Valley Dairy",
-    "category": "Agriculture & Allied",
-    "subcategory": "Dairy Farming",
-    "description": "A small-scale commercial dairy farm focusing on high-yield buffalo milk production for local cooperative supply.",
+    "id": "biz_demo_001",
+    "name": "Kashi Handloom Weaving Unit",
+    "category": "Textiles & Handicrafts",
+    "subcategory": "Handloom Weaving",
+    "description": "Semi-mechanized traditional handloom unit producing Banarasi sarees and fabrics for regional markets.",
     "status": "Ready",
     "location": {
-      "state": "Maharashtra",
-      "district": "Pune",
-      "block": "Khed"
+      "state": "Uttar Pradesh",
+      "district": "Varanasi",
+      "block": "Arajiline",
+      "village": "Kashipur"
     },
     "capital": {
-      "availableMargin": 150000,
-      "expectedInvestment": 800000,
-      "workingCapital": 50000
+      "availableMargin": 120000,
+      "expectedInvestment": 450000,
+      "workingCapital": 40000
     },
     "operations": {
-      "expectedRevenue": 45000,
-      "expectedPrice": 55,
-      "productionQuantity": 30
+      "expectedRevenue": 55000,
+      "expectedPrice": 1200,
+      "productionQuantity": 45
     },
     "resources": {
-      "land": "0.5 Acre owned",
-      "equipment": "Basic shed exists",
-      "existingResources": "Water connection, grid electricity"
+      "land": "Work shed at homestead",
+      "equipment": "2 Pit looms and yarn bobbin winder",
+      "existingResources": "Grid electricity, artisan weaver network"
     }
   },
   "comparison": [

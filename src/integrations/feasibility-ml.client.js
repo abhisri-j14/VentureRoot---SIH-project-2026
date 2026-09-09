@@ -65,7 +65,7 @@ export async function predictFeasibility({ business, profile } = {}) {
   const expectedRevenue = business?.expectedRevenue || business?.operations?.expectedRevenue || 45000;
   const expectedPrice = business?.expectedPrice || business?.operations?.expectedPrice || 55;
 
-  const entrepreneurName = profile?.fullName || profile?.firstName || "Ravi Kumar";
+  const entrepreneurName = profile?.fullName || profile?.firstName || "Entrepreneur";
   const experience = profile?.businessExperience || "3-5 years";
   const skills = Array.isArray(profile?.skills) ? profile.skills.join(", ") : profile?.skills || "General management";
 

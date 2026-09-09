@@ -25,7 +25,7 @@ export default function ReportDetailPage({
       getReportDetails(id).then(r => {
         if (r) {
           const enriched = { ...r };
-          if (activeBusiness?.name && (!enriched.businessName || enriched.businessName.includes("Green Valley"))) {
+          if (activeBusiness?.name) {
             enriched.businessName = activeBusiness.name;
             enriched.title = `${activeBusiness.name} Comprehensive Advisory Report`;
           }
