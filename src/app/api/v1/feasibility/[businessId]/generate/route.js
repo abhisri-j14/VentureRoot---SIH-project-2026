@@ -35,10 +35,18 @@ export async function POST(
         businessId
       );
 
+    let body = {};
+    try {
+      body = await request.json();
+    } catch (e) {
+      body = {};
+    }
+
     const response =
       await generateFeasibilityController(
         user,
-        validatedBusinessId
+        validatedBusinessId,
+        body
       );
 
     return successResponse(response);

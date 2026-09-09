@@ -5,6 +5,7 @@ import { Send, User, Bot, Trash2, Mic, Sparkles } from "lucide-react";
 import { EvidenceBadge } from "@/components/evidence/EvidenceBadge";
 import { ChatMessage, advisorApi } from "../api/advisorApi";
 import { VoiceRecorder } from "@/features/voice/components/VoiceRecorder";
+import { prototypeStorage } from "@/lib/storage/prototypeStorage";
 
 interface ChatWindowProps {
   externalPrompt?: string | null;
@@ -53,10 +54,34 @@ export const ChatWindow = ({ externalPrompt, onClearPrompt }: ChatWindowProps = 
     setIsStreaming(true);
 
     try {
+      const currentUser = prototypeStorage.getCurrentUser();
+      const userProfile = currentUser ? prototypeStorage.getProfile(currentUser.id) : null;
+      const userBusinesses = currentUser ? prototypeStorage.getBusinesses(currentUser.id) : [];
+      const activeBiz = userBusinesses[0] || null;
+
       const res: any = await advisorApi.chat({
         message: userMessage.content,
         context: {
           history: messages.slice(-6).map((m) => ({ role: m.role, content: m.content })),
+          profile: userProfile ? {
+            fullName: userProfile.fullName,
+            location: userProfile.location,
+            availableCapital: userProfile.financial?.availableCapital,
+            income: userProfile.financial?.income,
+            businessExperience: userProfile.experience?.businessExperience,
+            skills: userProfile.experience?.skills,
+            education: userProfile.experience?.education,
+          } : undefined,
+          business: activeBiz ? {
+            name: activeBiz.name,
+            category: { name: activeBiz.category, subcategory: activeBiz.subcategory },
+            description: activeBiz.description,
+            location: activeBiz.location,
+            availableMargin: activeBiz.capital?.availableMargin,
+            expectedInvestment: activeBiz.capital?.expectedInvestment,
+            expectedRevenue: activeBiz.operations?.expectedRevenue,
+            resources: activeBiz.resources,
+          } : undefined,
         },
       });
 

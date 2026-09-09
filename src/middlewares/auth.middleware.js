@@ -11,10 +11,22 @@ export async function authenticate(request) {
     process.env.NEXT_PUBLIC_DATA_SOURCE === "json" ||
     !process.env.SUPABASE_URL;
 
+  const extractMockUser = (t) => {
+    if (t && t.startsWith("mock-token-")) {
+      const id = t.replace("mock-token-", "");
+      return {
+        id,
+        email: `${id}@example.com`,
+        user_metadata: { full_name: "Entrepreneur" },
+      };
+    }
+    return usersData.currentUser;
+  };
+
   if (!authorization) {
     if (isMockMode) {
       return {
-        user: usersData.currentUser,
+        user: extractMockUser("demo-token"),
         accessToken: "demo-token",
       };
     }
@@ -29,7 +41,7 @@ export async function authenticate(request) {
   if (scheme !== "Bearer" || !token) {
     if (isMockMode) {
       return {
-        user: usersData.currentUser,
+        user: extractMockUser("demo-token"),
         accessToken: "demo-token",
       };
     }
@@ -44,7 +56,7 @@ export async function authenticate(request) {
     if (!user) {
       if (isMockMode) {
         return {
-          user: usersData.currentUser,
+          user: extractMockUser(token),
           accessToken: token,
         };
       }
@@ -60,7 +72,7 @@ export async function authenticate(request) {
   } catch (error) {
     if (isMockMode) {
       return {
-        user: usersData.currentUser,
+        user: extractMockUser(token),
         accessToken: token,
       };
     }

@@ -11,6 +11,8 @@ import { motion } from "framer-motion";
 import { profileApi } from "../api/profileApi";
 
 import { getLocationHierarchy, useLocationSearch } from "@/lib/data/locations";
+import { prototypeStorage } from "@/lib/storage/prototypeStorage";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 // Minimal Mock Data for UI interaction
 const MOCK_LOCATION_DATA = getLocationHierarchy();
@@ -28,6 +30,9 @@ export const OnboardingFlow = () => {
   // Search Results for autocomplete
   const { data: MOCK_SEARCH_RESULTS } = useLocationSearch(searchTerm);
 
+  const activeUser = prototypeStorage.getCurrentUser();
+  const authStoreUser = useAuthStore((state) => state.user);
+
   const {
     register,
     handleSubmit,
@@ -39,6 +44,8 @@ export const OnboardingFlow = () => {
     resolver: zodResolver(profileSchema),
     mode: "onChange",
     defaultValues: {
+      fullName: activeUser?.name || authStoreUser?.name || "",
+      email: activeUser?.email || authStoreUser?.email || "",
       experience: {
         businessExperience: "None",
       },
@@ -83,6 +90,7 @@ export const OnboardingFlow = () => {
 
       const payload: any = {
         fullName: data.fullName,
+        email: data.email,
         phone: data.phone?.trim() ? data.phone.trim() : undefined,
         location: {
           state: data.location.state,
@@ -101,13 +109,25 @@ export const OnboardingFlow = () => {
         },
       };
 
-      await profileApi.updateProfile(payload);
+      // 1. Save profile to prototype storage for current active user
+      const currentUser = prototypeStorage.getCurrentUser();
+      const userId = currentUser?.id || authStoreUser?.id || `usr_${Date.now()}`;
+      prototypeStorage.saveProfile(userId, payload);
+
+      // 2. Attempt backend update if running
+      try {
+        await profileApi.updateProfile(payload);
+      } catch (e) {
+        console.warn("Backend updateProfile offline or in prototype mode, saved to prototype storage.");
+      }
+
       setIsSubmitting(false);
-      router.push("/dashboard");
+      // Guide user directly to create their business enterprise
+      router.push("/business/create");
     } catch (error: any) {
-      console.warn("Backend request failed or offline. Proceeding to dashboard for UI testing.");
+      console.warn("Error in onboarding submission:", error);
       setIsSubmitting(false);
-      router.push("/dashboard");
+      router.push("/business/create");
     }
   };
 
@@ -165,7 +185,7 @@ export const OnboardingFlow = () => {
                 type="text"
                 {...register("fullName")}
                 className="w-full rounded-xl bg-gray-50/50 border border-black/5 p-3.5 font-sans text-[14px] transition-all outline-none focus:ring-4 focus:ring-[#1E6702]/10 focus:border-[#1E6702] focus:bg-white text-[#200813] font-medium shadow-sm"
-                placeholder="Ravi Kumar"
+                placeholder={activeUser?.name || "e.g. Ananya Sharma"}
               />
               {errors.fullName && <p className="text-red-500 font-sans text-[12px] mt-1.5 font-medium">{errors.fullName.message}</p>}
             </div>

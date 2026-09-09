@@ -27,12 +27,15 @@ export async function getFeasibilityController(
 
 export async function generateFeasibilityController(
   user,
-  businessId
+  businessId,
+  payload = {}
 ) {
   const feasibility =
     await generateFeasibility({
       userId: user.id,
       businessId,
+      clientBusiness: payload.business,
+      clientProfile: payload.profile,
     });
 
   return {

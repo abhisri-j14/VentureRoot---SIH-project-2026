@@ -9,8 +9,8 @@ export const feasibilityApi = {
   /**
    * Generates or starts the generation job for feasibility.
    */
-  generateFeasibility: async (businessId: string): Promise<FeasibilityGenerateResponse> => {
-    const response = await apiClient.post(`/feasibility/${businessId}/generate`);
+  generateFeasibility: async (businessId: string, payload?: any): Promise<FeasibilityGenerateResponse> => {
+    const response = await apiClient.post(`/feasibility/${businessId}/generate`, payload || {});
     return response.data;
   },
 

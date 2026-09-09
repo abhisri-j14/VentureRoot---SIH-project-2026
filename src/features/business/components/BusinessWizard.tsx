@@ -8,6 +8,7 @@ import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { useRouter } from "next/navigation";
 import { AlertCircle, Check, Info, Bookmark, ArrowRight, Sprout, Leaf } from "lucide-react";
 import { businessApi } from "../api/businessApi";
+import { prototypeStorage } from "@/lib/storage/prototypeStorage";
 
 const WIZARD_STEPS = [
   { id: 1, label: "Business Category", subtitle: "Choose your sector" },
@@ -25,6 +26,9 @@ export const BusinessWizard = () => {
   const [globalError, setGlobalError] = useState<string | null>(null);
   const router = useRouter();
 
+  const activeUser = prototypeStorage.getCurrentUser();
+  const userProfile = activeUser ? prototypeStorage.getProfile(activeUser.id) : null;
+
   const {
     register,
     handleSubmit,
@@ -36,13 +40,13 @@ export const BusinessWizard = () => {
     mode: "onTouched",
     defaultValues: {
       categoryId: "",
-      state: "",
-      district: "",
-      block: "",
-      village: "",
-      availableMargin: 0,
-      existingResources: "",
-      expectedRevenue: 0,
+      state: userProfile?.location?.state || "",
+      district: userProfile?.location?.district || "",
+      block: userProfile?.location?.block || "",
+      village: userProfile?.location?.village || "",
+      availableMargin: userProfile?.financial?.availableCapital || 0,
+      existingResources: userProfile?.experience?.skills ? `Skills: ${Array.isArray(userProfile.experience.skills) ? userProfile.experience.skills.join(", ") : userProfile.experience.skills}` : "",
+      expectedRevenue: userProfile?.financial?.income ? userProfile.financial.income * 2 : 0,
     },
   });
 
@@ -66,11 +70,51 @@ export const BusinessWizard = () => {
     setIsSubmitting(true);
     setGlobalError(null);
     try {
-      await businessApi.create(data);
-      router.push("/business/123");
+      const currentUser = prototypeStorage.getCurrentUser();
+      const userId = currentUser?.id || "guest";
+      const categoryCapitalized = data.categoryId
+        ? data.categoryId.charAt(0).toUpperCase() + data.categoryId.slice(1)
+        : "General";
+      const businessTitle = `${categoryCapitalized} Enterprise (${data.village || data.district || "Local"})`;
+
+      const savedBusiness = prototypeStorage.saveBusiness(userId, {
+        name: businessTitle,
+        category: categoryCapitalized,
+        description: `${categoryCapitalized} business enterprise serving the local community and nearby commercial markets.`,
+        status: "Ready",
+        location: {
+          state: data.state || "State",
+          district: data.district || "District",
+          block: data.block || "",
+          village: data.village || "",
+        },
+        capital: {
+          availableMargin: Number(data.availableMargin) || 50000,
+          workingCapital: Math.round((Number(data.availableMargin) || 50000) * 0.35),
+          expectedInvestment: Math.round((Number(data.availableMargin) || 50000) * 2.5),
+        },
+        operations: {
+          expectedRevenue: Number(data.expectedRevenue) || 30000,
+          expectedPrice: 75,
+          productionQuantity: Math.round((Number(data.expectedRevenue) || 30000) / 75),
+        },
+        resources: {
+          existingResources: data.existingResources || "Basic shed, local grid connection",
+          land: data.village ? `${data.village} site` : "Commercial plot",
+          equipment: "Essential sector-specific tools & processing equipment",
+        },
+      });
+
+      try {
+        await businessApi.create(data);
+      } catch (backendErr) {
+        console.warn("Backend businessApi.create offline or in prototype mode, saved to prototype storage.");
+      }
+
+      router.push(`/business/${savedBusiness.id}`);
     } catch (error: any) {
-      console.warn("Backend request failed or offline. Proceeding to mock business route for UI testing.");
-      router.push("/business/123");
+      console.error("Error submitting business:", error);
+      router.push("/dashboard");
     } finally {
       setIsSubmitting(false);
     }

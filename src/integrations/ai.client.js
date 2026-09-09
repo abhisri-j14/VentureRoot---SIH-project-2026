@@ -75,32 +75,32 @@ async function callGeminiApi({ prompt, systemInstruction, jsonMode = false, mode
  */
 function buildContextSummary(context) {
   const trusted = context?.trusted || {};
-  const profile = trusted.profile || {};
-  const business = trusted.business || {};
   const userProvided = context?.userProvided || {};
+  const profile = userProvided.profile || trusted.profile || {};
+  const business = userProvided.business || trusted.business || {};
 
   const profileSummary = [
-    `Entrepreneur Name: ${profile.fullName || profile.firstName || "Ravi Kumar"}`,
-    `Location: ${[profile.location?.village, profile.location?.block, profile.location?.district, profile.location?.state].filter(Boolean).join(", ") || "Chakan, Khed, Pune, Maharashtra"}`,
-    `Available Capital: ₹${Number(profile.availableCapital || 500000).toLocaleString("en-IN")}`,
-    `Monthly Income: ₹${Number(profile.income || 25000).toLocaleString("en-IN")}`,
-    `Education: ${profile.education || "B.Com"}`,
-    `Business Experience: ${profile.businessExperience || "3-5 years"}`,
-    `Skills: ${Array.isArray(profile.skills) ? profile.skills.join(", ") : profile.skills || "Agriculture, Supply Chain"}`,
+    `Entrepreneur Name: ${profile.fullName || profile.firstName || "Entrepreneur"}`,
+    `Location: ${[profile.location?.village, profile.location?.block, profile.location?.district, profile.location?.state].filter(Boolean).join(", ") || "Local Cluster, Maharashtra"}`,
+    `Available Capital: ₹${Number(profile.availableCapital || 100000).toLocaleString("en-IN")}`,
+    `Monthly Income: ₹${Number(profile.income || 20000).toLocaleString("en-IN")}`,
+    `Education: ${profile.education || "Secondary"}`,
+    `Business Experience: ${profile.businessExperience || "0-2 years"}`,
+    `Skills: ${Array.isArray(profile.skills) ? profile.skills.join(", ") : profile.skills || "Local retail, craft & agriculture"}`,
   ].join("\n");
 
   const businessSummary = [
-    `Business Name: ${business.name || "Green Valley Dairy"}`,
-    `Category: ${business.category?.name || "Agriculture & Allied"} (${business.category?.subcategory || "Dairy Farming"})`,
-    `Description: ${business.description || "Small-scale commercial dairy farm for local cooperative supply"}`,
-    `Location: ${[business.location?.village, business.location?.block, business.location?.district, business.location?.state].filter(Boolean).join(", ") || "Khed, Pune, Maharashtra"}`,
-    `Available Margin: ₹${Number(business.availableMargin || 150000).toLocaleString("en-IN")}`,
-    `Expected Total Investment: ₹${Number(business.expectedInvestment || 800000).toLocaleString("en-IN")}`,
-    `Working Capital: ₹${Number(business.workingCapital || 50000).toLocaleString("en-IN")}`,
-    `Expected Monthly Revenue: ₹${Number(business.expectedRevenue || 45000).toLocaleString("en-IN")}`,
-    `Expected Unit Price: ₹${business.expectedPrice || 55}`,
-    `Production Volume / Capacity: ${business.productionQuantity || 30} units/day`,
-    `Existing Assets & Resources: ${JSON.stringify(business.resources || { land: "0.5 Acre owned", equipment: "Basic shed exists", resources: "Water, electricity" })}`,
+    `Business Name: ${business.name || "Micro-Enterprise Plan"}`,
+    `Category: ${business.category?.name || business.category || "General Enterprise"} (${business.category?.subcategory || business.subcategory || "Local Sector"})`,
+    `Description: ${business.description || "Micro-enterprise plan for local market service."}`,
+    `Location: ${[business.location?.village, business.location?.block, business.location?.district, business.location?.state].filter(Boolean).join(", ") || "Local Cluster"}`,
+    `Available Margin: ₹${Number(business.availableMargin || profile.availableCapital || 50000).toLocaleString("en-IN")}`,
+    `Expected Total Investment: ₹${Number(business.expectedInvestment || (Number(business.availableMargin || 50000) * 2.5)).toLocaleString("en-IN")}`,
+    `Working Capital: ₹${Number(business.workingCapital || (Number(business.availableMargin || 50000) * 0.35)).toLocaleString("en-IN")}`,
+    `Expected Monthly Revenue: ₹${Number(business.expectedRevenue || 30000).toLocaleString("en-IN")}`,
+    `Expected Unit Price: ₹${business.expectedPrice || 75}`,
+    `Production Volume / Capacity: ${business.productionQuantity || 50} units/month`,
+    `Existing Assets & Resources: ${JSON.stringify(business.resources || { land: "Local site", equipment: "Basic equipment", resources: "Power & water" })}`,
   ].join("\n");
 
   let supplemental = "";

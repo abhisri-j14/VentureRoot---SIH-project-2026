@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import usersData from "@/data/users.json";
+import { prototypeStorage, PrototypeUser } from "@/lib/storage/prototypeStorage";
 import { getCurrentUser } from "@/lib/data/users";
 
 export interface MockUser {
@@ -12,10 +12,21 @@ export interface MockUser {
 }
 
 const getInitialUser = (): MockUser | null => {
-  if (process.env.NEXT_PUBLIC_DATA_SOURCE === "database") {
-    return null;
+  const current = prototypeStorage.getCurrentUser();
+  if (current) {
+    const profile = prototypeStorage.getProfile(current.id);
+    const loc = profile?.location
+      ? [profile.location.village, profile.location.district, profile.location.state].filter(Boolean).join(", ")
+      : undefined;
+    return {
+      id: current.id,
+      name: current.name,
+      email: current.email,
+      roleLabel: current.roleLabel || "Entrepreneur",
+      location: loc,
+    };
   }
-  return usersData.currentUser;
+  return null;
 };
 
 interface AuthState {
@@ -43,6 +54,13 @@ export const useAuthStore = create<AuthState>()(
           localStorage.setItem("ventureroot_token", token);
           document.cookie = `ventureroot_token=${token}; path=/; max-age=2592000; SameSite=Lax`;
         }
+        prototypeStorage.setCurrentUser({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          roleLabel: user.roleLabel,
+          createdAt: new Date().toISOString(),
+        });
         set({ token, user });
       },
 
@@ -51,6 +69,7 @@ export const useAuthStore = create<AuthState>()(
           localStorage.removeItem("ventureroot_token");
           document.cookie = "ventureroot_token=; path=/; max-age=0";
         }
+        prototypeStorage.logout();
         set({ token: null, user: null });
       },
 
@@ -58,6 +77,8 @@ export const useAuthStore = create<AuthState>()(
         const user = await getCurrentUser();
         if (user) {
           set({ user });
+        } else {
+          set({ user: null });
         }
       },
     }),
@@ -65,6 +86,21 @@ export const useAuthStore = create<AuthState>()(
       name: "ventureroot_auth_storage",
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
+        // Refresh from prototypeStorage
+        const current = prototypeStorage.getCurrentUser();
+        if (current) {
+          const profile = prototypeStorage.getProfile(current.id);
+          const loc = profile?.location
+            ? [profile.location.village, profile.location.district, profile.location.state].filter(Boolean).join(", ")
+            : undefined;
+          state?.login(`mock-token-${current.id}`, {
+            id: current.id,
+            name: current.name,
+            email: current.email,
+            roleLabel: current.roleLabel || "Entrepreneur",
+            location: loc,
+          });
+        }
       },
     }
   )

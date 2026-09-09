@@ -108,6 +108,8 @@ function mapProfileForFeasibility(
 export async function loadFeasibilityData({
   userId,
   businessId,
+  clientBusiness,
+  clientProfile,
 }) {
   let business = null;
   let profile = null;
@@ -135,11 +137,15 @@ export async function loadFeasibilityData({
     profile = null;
   }
 
-  const resolvedBusiness = business
+  const resolvedBusiness = clientBusiness
+    ? clientBusiness
+    : business
     ? mapBusinessForFeasibility(business, fullLocation)
     : getFallbackBusiness(businessId);
 
-  const resolvedProfile = profile
+  const resolvedProfile = clientProfile
+    ? clientProfile
+    : profile
     ? mapProfileForFeasibility(profile)
     : getFallbackProfile();
 

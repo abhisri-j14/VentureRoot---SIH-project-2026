@@ -13,6 +13,7 @@ import { motion, Variants } from "framer-motion";
 import { TextEffect } from "@/components/ui/text-effect";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { authApi } from "@/features/auth/api/authApi";
+import { prototypeStorage } from "@/lib/storage/prototypeStorage";
 
 export default function LoginPage() {
   return (
@@ -51,6 +52,22 @@ function LoginPageContent() {
     },
   });
 
+  const handleDemoLogin = () => {
+    const demoUser = prototypeStorage.seedDemoAccount();
+    const mockAuthUser = {
+      id: demoUser.id,
+      name: demoUser.name,
+      email: demoUser.email,
+      roleLabel: demoUser.roleLabel,
+    };
+    loginAction(`mock-token-${demoUser.id}`, mockAuthUser);
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    } else {
+      router.push("/dashboard");
+    }
+  };
+
   const onSubmit = async (data: LoginFormValues) => {
     setGlobalError(null);
     setIsSubmitting(true);
@@ -59,15 +76,22 @@ function LoginPageContent() {
       
       const session = res?.data?.session || res?.data?.data?.session || res?.session;
       const backendUser = res?.data?.user || res?.data?.data?.user || res?.user;
-      const token = session?.access_token || "mock-token-xyz-123";
+      const token = session?.access_token || `mock-token-${Date.now()}`;
       
       const authUser = backendUser ? {
         id: backendUser.id,
         name: backendUser.user_metadata?.full_name || backendUser.email?.split('@')[0] || "User",
         email: backendUser.email || data.email,
         roleLabel: backendUser.user_metadata?.role || "Business Owner",
-      } : mockUser!;
+      } : {
+        id: `usr_${Date.now()}`,
+        name: data.email.split('@')[0],
+        email: data.email,
+        roleLabel: "Business Owner",
+      };
 
+      // Also register or sync in prototypeStorage
+      prototypeStorage.register(authUser.name, authUser.email, data.password);
       loginAction(token, authUser);
       setIsSubmitting(false);
       
@@ -77,21 +101,29 @@ function LoginPageContent() {
         router.push("/dashboard");
       }
     } catch (error: any) {
-      // If the backend is completely unreachable (Network Error) during frontend-only dev,
-      // we gracefully fall back to the mock token to allow UI testing to continue.
-      if (error?.message === "Network Error") {
-        console.warn("Backend not running. Proceeding with mock login for UI testing.");
-        loginAction("mock-token-xyz-123", mockUser!);
+      // Check prototypeStorage for registered user
+      const localUser = prototypeStorage.login(data.email, data.password);
+      if (localUser) {
+        const authUser = {
+          id: localUser.id,
+          name: localUser.name,
+          email: localUser.email,
+          roleLabel: localUser.roleLabel,
+        };
+        loginAction(`mock-token-${localUser.id}`, authUser);
         setIsSubmitting(false);
         if (redirectUrl) {
           router.push(redirectUrl);
         } else {
           router.push("/dashboard");
         }
-      } else {
-        setGlobalError(error?.message || "Invalid credentials or server error");
-        setIsSubmitting(false);
+        return;
       }
+
+      setGlobalError(
+        "No account found with this email or password incorrect. Please create an account or click 'Explore Demo Account' below."
+      );
+      setIsSubmitting(false);
     }
   };
 
@@ -263,6 +295,20 @@ function LoginPageContent() {
                 ) : (
                   "Log In"
                 )}
+              </motion.button>
+
+              {/* Instant SIH Demo Exploration */}
+              <motion.button
+                variants={itemVariants}
+                type="button"
+                onClick={handleDemoLogin}
+                className="w-full py-3 rounded-xl bg-amber-50 border border-amber-300/80 hover:bg-amber-100/70 text-amber-900 font-sans text-[13px] font-semibold transition-all shadow-sm flex items-center justify-center gap-2 group"
+              >
+                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                Explore Demo Account (Rajesh Verma · Varanasi)
+                <span className="text-[11px] bg-amber-200/80 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider text-amber-950">
+                  Instant Tour
+                </span>
               </motion.button>
 
               <motion.div variants={itemVariants} className="flex items-center gap-4 my-2">

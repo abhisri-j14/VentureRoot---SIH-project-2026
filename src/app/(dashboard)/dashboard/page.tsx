@@ -91,22 +91,23 @@ export default function DashboardPage() {
   const userCapital = Number(profileData?.financial?.availableCapital) || 0;
   const userIncome = Number(profileData?.financial?.income) || 0;
 
-  // If user has a real business in DB
-  const businessName = activeBusiness?.name || (userCapital > 0 ? "New Venture Opportunity" : "Packaged millet-based food products");
-  const businessCategory = activeBusiness?.category?.name || activeBusiness?.category || "Agriculture & Allied";
+  const hasBusiness = !!activeBusiness;
+  const userMargin = Number(activeBusiness?.capital?.availableMargin || (activeBusiness as any)?.availableMargin || userCapital);
+
+  // If user has a real business
+  const businessName = activeBusiness?.name || (userCapital > 0 ? "My Proposed Enterprise" : "Enterprise Setup Pending");
+  const businessCategory = (activeBusiness?.category as any)?.name || activeBusiness?.category || (profileData?.experience?.skills ? "Planned Micro-Enterprise" : "Rural Enterprise Planning");
   const businessId = activeBusiness?.id || "create";
 
   // Capex: If active business has expectedRevenue/margin or user has capital
-  const totalCapex = activeBusiness
-    ? Math.max(1, (Number(activeBusiness.availableMargin) || userCapital || 100000) / 100000)
-    : userCapital > 0
-    ? Number((userCapital / 100000).toFixed(2))
-    : businessesData.details.capital.expectedInvestment / 100000;
+  const totalCapex = userMargin > 0
+    ? Math.max(0.5, Number((userMargin * 2.5 / 100000).toFixed(2)))
+    : 1.5;
 
   // Estimated loan (e.g. 75% - 85% of capex under MUDRA / PMEGP guidelines)
   const loanAmount = Number((totalCapex * 0.8).toFixed(2));
   const ltvPercentage = totalCapex > 0 ? Math.min(95, Math.round((loanAmount / totalCapex) * 100)) : 80;
-  const businessScore = activeBusiness ? 84 : userCapital > 0 ? 80 : 75;
+  const businessScore = activeBusiness ? 88 : userCapital > 0 ? 80 : 70;
 
   const capexBreakdown = activeBusiness ? [
     { name: "Equipment & Mach.", value: totalCapex * 40000 },
@@ -118,7 +119,12 @@ export default function DashboardPage() {
     { name: "Tools & Equipment", value: userCapital * 0.3 },
     { name: "Operational Margin", value: userCapital * 0.2 },
     { name: "Marketing & Setup", value: userCapital * 0.1 },
-  ] : businessesData.dashboard.capexBreakdown || [];
+  ] : [
+    { name: "Tools & Equipment", value: 60000 },
+    { name: "Working Capital", value: 45000 },
+    { name: "Initial Stock", value: 30000 },
+    { name: "Licensing & Setup", value: 15000 },
+  ];
 
   const breakdownColors = ["bg-[#60a5fa]", "bg-[#93c5fd]", "bg-[#38bdf8]", "bg-[#dbeafe]"];
   const totalBreakdown = capexBreakdown.reduce((sum: number, item: any) => sum + item.value, 0);
@@ -150,7 +156,7 @@ export default function DashboardPage() {
         variants={headerVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-col md:flex-row md:items-center justify-between gap-2"
+        className="flex flex-col md:flex-row md:items-center justify-between gap-3"
       >
         <div>
           <h1 className="font-heading text-[32px] font-bold text-[#242424] tracking-tight leading-tight">
@@ -160,15 +166,43 @@ export default function DashboardPage() {
             {businessCategory} • {locationStr}
           </p>
         </div>
-        {/* Live status indicator */}
-        <div className="flex items-center gap-2 text-[12px] font-semibold text-slate-400">
+        {/* Prototype status indicator */}
+        <div className="flex items-center gap-2 text-[12px] font-semibold text-slate-600 bg-white/80 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-black/5 shadow-xs">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          Live Database Connected
+          Prototype Mode · Live Gemini AI Active
         </div>
       </motion.div>
+
+      {/* Welcome Onboarding Banner if no business created yet */}
+      {!hasBusiness && (
+        <motion.div
+          variants={cardVariants}
+          initial="hidden"
+          animate="visible"
+          className="p-6 bg-[#1f3f22] text-[#f9faeb] rounded-2xl shadow-lg border border-[#2d5c32] flex flex-col md:flex-row items-start md:items-center justify-between gap-5"
+        >
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[11px] uppercase font-bold tracking-wider text-emerald-300">Ready to start?</span>
+            </div>
+            <h3 className="font-heading text-[22px] font-bold">Register your enterprise to unlock full AI feasibility</h3>
+            <p className="text-[#f9faeb]/80 text-sm max-w-2xl font-sans leading-relaxed">
+              Complete our 6-step guided wizard to model your capital requirements, discover matching Indian government schemes (PMEGP, MUDRA), and run live Gemini AI market feasibility.
+            </p>
+          </div>
+          <Link
+            href="/business/create"
+            className="px-6 py-3.5 bg-[#81cc87] hover:bg-[#6ebb74] text-[#1a3d24] font-bold rounded-xl shadow-md transition-all shrink-0 flex items-center gap-2 text-sm"
+          >
+            <span>Setup Business</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </motion.div>
+      )}
 
       {/* ═══ MAIN GRID CANVAS ═══ */}
       <motion.div

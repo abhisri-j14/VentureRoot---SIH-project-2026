@@ -39,11 +39,15 @@ export async function getFeasibilityContext({
 export async function generateFeasibility({
   userId,
   businessId,
+  clientBusiness,
+  clientProfile,
 }) {
   const data =
     await loadFeasibilityData({
       userId,
       businessId,
+      clientBusiness,
+      clientProfile,
     });
 
   try {

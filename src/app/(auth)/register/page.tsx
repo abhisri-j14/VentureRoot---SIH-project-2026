@@ -12,6 +12,8 @@ import { LanguageSwitcher } from "@/features/i18n/components/LanguageSwitcher";
 import { motion, Variants } from "framer-motion";
 import { TextEffect } from "@/components/ui/text-effect";
 import { authApi } from "@/features/auth/api/authApi";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { prototypeStorage } from "@/lib/storage/prototypeStorage";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -35,23 +37,36 @@ export default function RegisterPage() {
     },
   });
 
+  const loginAction = useAuthStore((state) => state.login);
+
   const onSubmit = async (data: RegisterFormValues) => {
     setGlobalError(null);
     setIsSubmitting(true);
     try {
-      await authApi.register(data);
-      // RegisterResponse is unknown, but we don't need to consume it for navigation.
+      // 1. Always create local user in prototypeStorage
+      const localUser = prototypeStorage.register(data.fullName, data.email, data.password);
+      
+      // 2. Set active auth session in Zustand and Cookie
+      loginAction(`mock-token-${localUser.id}`, {
+        id: localUser.id,
+        name: localUser.name,
+        email: localUser.email,
+        roleLabel: localUser.roleLabel,
+      });
+
+      // 3. Attempt backend registration if available
+      try {
+        await authApi.register(data);
+      } catch (err) {
+        // Backend optional in prototype mode
+        console.warn("Backend offline or in prototype mode, continuing with prototype storage.");
+      }
+
       setIsSubmitting(false);
       router.push("/onboarding");
     } catch (error: any) {
-      if (error?.message === "Network Error") {
-        console.warn("Backend not running. Proceeding with mock routing for UI testing.");
-        setIsSubmitting(false);
-        router.push("/onboarding");
-      } else {
-        setGlobalError(error?.message || "Registration failed. Please try again.");
-        setIsSubmitting(false);
-      }
+      setGlobalError(error?.message || "Registration failed. Please try again.");
+      setIsSubmitting(false);
     }
   };
 
@@ -157,7 +172,7 @@ export default function RegisterPage() {
                   id="fullName"
                   type="text"
                   {...register("fullName")}
-                  placeholder="Ravi Kumar"
+                  placeholder="e.g. Ananya Sharma"
                   className={`w-full rounded-xl bg-white border ${errors.fullName ? "border-red-300 focus:ring-red-200" : "border-[#200813]/10 focus:ring-[#1E6702]/20 focus:border-[#1E6702]"
                     } p-3.5 font-sans text-[14px] transition-all outline-none focus:ring-4 text-[#200813] font-normal shadow-sm`}
                 />

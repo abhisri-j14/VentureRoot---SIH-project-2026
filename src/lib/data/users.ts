@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { DATA_SOURCE } from "./source";
-import usersData from "@/data/users.json";
 import { profileApi } from "@/features/profile/api/profileApi";
 import { authApi } from "@/features/auth/api/authApi";
+import { prototypeStorage } from "@/lib/storage/prototypeStorage";
 
 export const getCurrentUser = async (): Promise<any | null> => {
   if (DATA_SOURCE === "database") {
@@ -42,17 +42,30 @@ export const getCurrentUser = async (): Promise<any | null> => {
       return null;
     }
   }
-  return usersData.currentUser;
+
+  // Prototype storage mode: look up active session
+  const activeUser = prototypeStorage.getCurrentUser();
+  if (activeUser) {
+    const profile = prototypeStorage.getProfile(activeUser.id);
+    const location = profile?.location?.state
+      ? `${profile.location.district ? profile.location.district + ", " : ""}${profile.location.state}`
+      : undefined;
+    return {
+      id: activeUser.id,
+      name: profile?.fullName || activeUser.name,
+      email: activeUser.email,
+      roleLabel: activeUser.roleLabel || "Entrepreneur",
+      location,
+    };
+  }
+
+  return null;
 };
 
 export const useProfile = () => {
-  const [data, setData] = useState<any | null>(
-    DATA_SOURCE === "json" ? usersData.profile : null
-  );
-  const [onboardingCompleted, setOnboardingCompleted] = useState<boolean | null>(
-    DATA_SOURCE === "json" ? true : null
-  );
-  const [isLoading, setIsLoading] = useState(DATA_SOURCE === "database");
+  const [data, setData] = useState<any | null>(null);
+  const [onboardingCompleted, setOnboardingCompleted] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   const refetch = useCallback(() => {
@@ -70,13 +83,24 @@ export const useProfile = () => {
         .catch((err) => {
           setError(err);
           setData(null);
+          setOnboardingCompleted(false);
           setIsLoading(false);
         });
-    } else {
-      setData(usersData.profile);
-      setOnboardingCompleted(true);
-      setIsLoading(false);
+      return;
     }
+
+    // Prototype storage mode: read current user's profile
+    const activeUser = prototypeStorage.getCurrentUser();
+    if (activeUser) {
+      const profile = prototypeStorage.getProfile(activeUser.id);
+      const isCompleted = Boolean(profile?.fullName && profile?.location?.state);
+      setData(profile);
+      setOnboardingCompleted(isCompleted);
+    } else {
+      setData(null);
+      setOnboardingCompleted(false);
+    }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
