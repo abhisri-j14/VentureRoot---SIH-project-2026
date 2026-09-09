@@ -390,3 +390,237 @@ Output strictly valid JSON.`;
     };
   }
 }
+
+/**
+ * Generates tailored action roadmap with Gemini AI
+ */
+export async function generateRoadmapWithAi({ business, profile } = {}) {
+  const businessName = business?.name || "Rural Micro-Enterprise";
+  const category = business?.category?.name || business?.category || "Local Enterprise";
+  const location = [business?.location?.village, business?.location?.district, business?.location?.state].filter(Boolean).join(", ") || "Local Block";
+  const margin = business?.capital?.availableMargin || 50000;
+  const experience = profile?.businessExperience || "None";
+  const skills = Array.isArray(profile?.skills) ? profile.skills.join(", ") : profile?.skills || "General";
+
+  const systemInstruction = `You are an expert rural business launcher and operations strategist in India.
+Generate a tailored 6-step chronological action roadmap for launching this specific rural business.
+Format response strictly as valid JSON:
+{
+  "actions": [
+    {
+      "id": "act-1",
+      "order": 1,
+      "title": "Formulate Detailed Project Report (DPR) & Scheme Filing",
+      "description": "Prepare statutory project cost breakdown and file for PMEGP/MUDRA subsidy.",
+      "whatToDo": "Engage DIC or local KVIC channelizing agency with your land, ID, and capital details.",
+      "expectedOutcome": "DPR acknowledgement and initial subsidy sanction letter.",
+      "timeframe": "Weeks 1-3",
+      "priority": "HIGH",
+      "category": "FINANCE",
+      "status": "NOT_STARTED"
+    }
+  ]
+}
+Category must be one of: "MARKET", "FINANCE", "OPERATIONS", "COMPLIANCE", "MARKETING", "SUPPLY".
+Priority must be one of: "HIGH", "MEDIUM", "LOW".
+Generate exactly 6 concrete actions ordered from step 1 to 6.`;
+
+  const prompt = `Generate an action roadmap for:
+Business: ${businessName} (${category})
+Location: ${location}
+Available Capital: ?${Number(margin).toLocaleString("en-IN")}
+Entrepreneur Experience: ${experience}, Skills: ${skills}
+
+Return strictly JSON:`;
+
+  try {
+    const raw = await callGeminiApi({ prompt, systemInstruction, jsonMode: true });
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed?.actions) && parsed.actions.length > 0) {
+      return {
+        id: `roadmap_${Date.now()}`,
+        businessId: business?.id || "biz_custom",
+        businessName,
+        location,
+        actions: parsed.actions,
+      };
+    }
+  } catch (err) {
+    console.warn("Gemini generateRoadmap error, falling back to structured roadmap:", err?.message);
+  }
+
+  // Fallback tailored roadmap
+  return {
+    id: `roadmap_${Date.now()}`,
+    businessId: business?.id || "biz_custom",
+    businessName,
+    location,
+    actions: [
+      {
+        id: "act-1",
+        order: 1,
+        title: `Formulate DPR & PMEGP/MUDRA Application for ${businessName}`,
+        description: "Draft comprehensive Detailed Project Report detailing capital costs, equipment, and margin requirements.",
+        whatToDo: `Visit the District Industries Centre (DIC) in ${location} to submit online application on the KVIC/e-portal.`,
+        expectedOutcome: "Application tracking number and preliminary sanction for margin subsidy.",
+        timeframe: "Weeks 1-3",
+        priority: "HIGH",
+        category: "FINANCE",
+        status: "IN_PROGRESS",
+      },
+      {
+        id: "act-2",
+        order: 2,
+        title: "Udyam Registration & Local Gram Panchayat / Trade NOC",
+        description: "Obtain statutory MSME Udyam registration and necessary municipal/panchayat approvals.",
+        whatToDo: "Register on udyamregistration.gov.in using Aadhaar and PAN; acquire village clearance.",
+        expectedOutcome: "Udyam Certificate enabling priority lending rates and power tariff concessions.",
+        timeframe: "Weeks 4-5",
+        priority: "HIGH",
+        category: "COMPLIANCE",
+        status: "NOT_STARTED",
+      },
+      {
+        id: "act-3",
+        order: 3,
+        title: `Procure Core Machinery & Processing Equipment for ${category}`,
+        description: "Acquire validated tools, machinery, and ensure reliable 3-phase electric or water supply.",
+        whatToDo: "Obtain 3 formal quotations from verified regional suppliers to satisfy bank disbursement norms.",
+        expectedOutcome: "Delivery and test-commissioning of essential manufacturing/processing equipment.",
+        timeframe: "Weeks 6-9",
+        priority: "HIGH",
+        category: "OPERATIONS",
+        status: "NOT_STARTED",
+      },
+      {
+        id: "act-4",
+        order: 4,
+        title: "Establish Raw Material Supply & Supplier Agreements",
+        description: "Secure consistent local sourcing channels with backup distributors within 15km.",
+        whatToDo: "Sign informal quarterly supply agreements with local vendors to protect against input price shocks.",
+        expectedOutcome: "30-day raw material buffer maintained on site.",
+        timeframe: "Weeks 10-11",
+        priority: "MEDIUM",
+        category: "SUPPLY",
+        status: "NOT_STARTED",
+      },
+      {
+        id: "act-5",
+        order: 5,
+        title: "Trial Production Run & Quality Compliance Check",
+        description: "Conduct trial batch testing, calibrate processing times, and evaluate output consistency.",
+        whatToDo: "Produce first 50 sample units, solicit direct feedback from 10 local retail stores/buyers.",
+        expectedOutcome: "Standardized quality output meeting local consumer expectations.",
+        timeframe: "Weeks 12-13",
+        priority: "MEDIUM",
+        category: "OPERATIONS",
+        status: "NOT_STARTED",
+      },
+      {
+        id: "act-6",
+        order: 6,
+        title: "Commercial Launch & Local Retail Distribution Tie-ups",
+        description: "Roll out commercial sales across local village haats, weekly markets, and retail counters.",
+        whatToDo: "Distribute product signage and establish credit-free cash-and-carry delivery terms with first 5 shops.",
+        expectedOutcome: "First regular monthly revenue stream generated.",
+        timeframe: "Week 14+",
+        priority: "HIGH",
+        category: "MARKET",
+        status: "NOT_STARTED",
+      },
+    ],
+  };
+}
+
+/**
+ * Generates comparative analysis with Gemini AI
+ */
+export async function compareBusinessesWithAi({ userBusiness, benchmarkBusinesses = [] } = {}) {
+  const userName = userBusiness?.name || "Your Venture";
+  const userCategory = userBusiness?.category?.name || userBusiness?.category || "Current Venture";
+  const userMargin = userBusiness?.capital?.availableMargin || 50000;
+  const userRev = userBusiness?.operations?.expectedRevenue || 30000;
+
+  const systemInstruction = `You are an expert micro-enterprise viability analyst in India.
+Provide comparative strategic insight comparing the entrepreneur's active venture against common rural benchmark opportunities.
+Format response strictly as valid JSON:
+{
+  "verdict": "string",
+  "tradeOffSummary": "string",
+  "keyAdvantages": ["string", "string"],
+  "recommendations": ["string", "string", "string"]
+}`;
+
+  const prompt = `Compare the following enterprise:
+User Venture: ${userName} (${userCategory})
+Available Margin: ?${Number(userMargin).toLocaleString("en-IN")}
+Expected Monthly Revenue: ?${Number(userRev).toLocaleString("en-IN")}
+
+Benchmark Options: Dairy Farming (High capital, steady daily cash flow), Kirana & FMCG (Low margin, fast inventory turn), Handloom/Craft (Artisan skills, high profit margin, seasonal).
+
+Return strictly JSON:`;
+
+  try {
+    const raw = await callGeminiApi({ prompt, systemInstruction, jsonMode: true });
+    return JSON.parse(raw);
+  } catch (err) {
+    console.warn("Gemini compareBusinesses error, using fallback:", err?.message);
+    return {
+      verdict: `${userName} presents a balanced risk-return profile tailored to your available margin of ?${Number(userMargin).toLocaleString("en-IN")}.`,
+      tradeOffSummary: "Compared to high-capital dairy farming or low-margin grocery retail, your venture leverages specialized local demand and lower initial overhead.",
+      keyAdvantages: [
+        "Lower working capital lock-in compared to commodity retail",
+        "Higher gross margin retention on value-added products",
+        "Eligibility for targeted sector subsidies under PMEGP"
+      ],
+      recommendations: [
+        "Lock in upfront orders with local merchants before expanding capacity",
+        "Maintain at least 3 months of operational working capital in reserve",
+        "Apply for Udyam registration immediately to unlock priority bank lending"
+      ]
+    };
+  }
+}
+
+/**
+ * Generates dynamic executive dashboard briefing with Gemini AI
+ */
+export async function generateDashboardBriefingWithAi({ user, business } = {}) {
+  const name = user?.name || user?.fullName || "Entrepreneur";
+  const bizName = business?.name || "Your Enterprise";
+  const category = business?.category || "Micro-Enterprise";
+  const location = [business?.location?.district, business?.location?.state].filter(Boolean).join(", ") || "India";
+  const margin = business?.capital?.availableMargin || 50000;
+
+  const systemInstruction = `You are an encouraging rural enterprise advisor.
+Generate a concise morning briefing card for the entrepreneur's dashboard.
+Format response strictly as valid JSON:
+{
+  "headline": "string (short, inspiring, actionable)",
+  "readinessAssessment": "string (1-2 sentences on their current stage)",
+  "priorityAction": "string (single most important next step)",
+  "schemeHighlight": "string (top recommended government scheme)",
+  "riskAdvisory": "string (one practical cautionary note)"
+}`;
+
+  const prompt = `Briefing for:
+Entrepreneur: ${name}
+Business: ${bizName} (${category}) in ${location}
+Capital: ?${Number(margin).toLocaleString("en-IN")}
+
+Return strictly JSON:`;
+
+  try {
+    const raw = await callGeminiApi({ prompt, systemInstruction, jsonMode: true });
+    return JSON.parse(raw);
+  } catch (err) {
+    console.warn("Gemini dashboard briefing error, using fallback:", err?.message);
+    return {
+      headline: `Advancing ${bizName} Toward Commercial Launch`,
+      readinessAssessment: `Your venture plan in ${location} is in ready status with a committed margin of ?${Number(margin).toLocaleString("en-IN")}.`,
+      priorityAction: "Complete your Detailed Project Report (DPR) and submit through your local District Industries Centre (DIC).",
+      schemeHighlight: "PMEGP (Prime Minister Employment Generation Programme) offers up to 25-35% capital subsidy for rural micro-enterprises.",
+      riskAdvisory: "Ensure a minimum 60-day working capital reserve before executing capital equipment purchases."
+    };
+  }
+}

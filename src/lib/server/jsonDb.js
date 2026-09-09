@@ -315,4 +315,19 @@ export const businessDb = {
     await persistJson("businesses.json", raw);
     return items[idx];
   },
+  async saveFeasibility(businessId, feasibility) {
+    return await this.updateBusiness(businessId, { feasibility });
+  },
+
+  async saveRoadmap(businessId, roadmap) {
+    return await this.updateBusiness(businessId, { roadmap });
+  },
+
+  async saveFinancialExplanation(businessId, financialExplanation) {
+    return await this.updateBusiness(businessId, { financialExplanation });
+  },
+
+  async saveBriefing(businessId, briefing) {
+    return await this.updateBusiness(businessId, { briefing });
+  },
 };

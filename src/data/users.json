@@ -2,33 +2,60 @@
   "users": [
     {
       "id": "usr_demo_rajesh",
-      "name": "Rajesh Verma",
+      "name": "Sri",
       "email": "rajesh.verma@example.com",
       "passwordHash": "8fd5551e6d21d807e3a848b549937e5252a0b1972fbf373f38fd69452004b42f644bc155afbb7f00d7811dc4bc48335bb7a24431e5a0e436f66e523fad8be155",
       "salt": "78d4f8dada3348990f93c9871084bfc6",
       "roleLabel": "Entrepreneur",
       "createdAt": "2026-09-09T12:00:00.000Z",
       "profile": {
-        "fullName": "Rajesh Verma",
-        "email": "rajesh.verma@example.com",
-        "phone": "+91 9876543210",
+        "fullName": "Sri",
+        "email": "abhisri.jana14@gmail.com",
+        "phone": "06289597779",
         "location": {
-          "state": "Uttar Pradesh",
-          "district": "Varanasi",
-          "block": "Arajiline",
-          "village": "Kashipur"
+          "state": "West bengal",
+          "district": "Kolkata"
         },
         "financial": {
-          "availableCapital": 300000,
-          "income": 22000
+          "availableCapital": 50000,
+          "income": 20000
         },
         "experience": {
-          "businessExperience": "3-5 years",
+          "businessExperience": "None",
           "skills": [
-            "Textile Weaving",
-            "Local Retail"
+            "Sales"
           ],
-          "education": "Higher Secondary"
+          "education": "graduate"
+        },
+        "updatedAt": "2026-09-09T15:33:45.023Z"
+      }
+    },
+    {
+      "id": "usr_1788967926978_q7fou",
+      "name": "abhisri.jana14",
+      "email": "abhisri.jana14@gmail.com",
+      "passwordHash": "f26a6afbefda0644e963a982a63a86a2de44330438b75c475bdce4e816f3cc8101a3503dc279dbe7cdef3fb3a2d56f1f3be45782ee662177cf7897f0ac76dbe1",
+      "salt": "df31ede424b6a8bd27a6dc7918ab0d95",
+      "roleLabel": "Entrepreneur",
+      "createdAt": "2026-09-09T15:32:06.978Z",
+      "profile": {
+        "fullName": "abhisri.jana14",
+        "email": "abhisri.jana14@gmail.com",
+        "phone": "",
+        "location": {
+          "state": "",
+          "district": "",
+          "block": "",
+          "village": ""
+        },
+        "financial": {
+          "availableCapital": 0,
+          "income": 0
+        },
+        "experience": {
+          "businessExperience": "None",
+          "skills": [],
+          "education": ""
         }
       }
     }

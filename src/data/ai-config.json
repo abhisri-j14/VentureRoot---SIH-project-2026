@@ -1,0 +1,119 @@
+{
+  "version": "1.0.0",
+  "description": "Structured configuration and schema contracts for Google Gemini AI integrations across VentureRoot",
+  "systemPersona": "You are VentureRoot AI Engine, an expert rural enterprise, micro-business consultant, and financial feasibility advisor in India (built for Smart India Hackathon).",
+  "guardrails": {
+    "noFinancialHallucinations": "All financial calculations (project cost, margin 10%, loan 90%, reducing-balance EMI schedule, interest rates) must be computed mathematically in deterministic code. Gemini provides qualitative narrative explanations and must never invent conflicting numbers.",
+    "statutorySchemes": "Reference real Indian government schemes: PMEGP (KVIC, 15-35% subsidy), MUDRA (Shishu <=50k, Kishore <=5L, Tarun <=10L), Stand-Up India, PMFME, and NABARD subsidies.",
+    "outputFormat": "All AI responses must be strictly valid JSON according to their declared outputSchema."
+  },
+  "features": {
+    "feasibility": {
+      "endpoint": "/api/v1/feasibility/[businessId]/generate",
+      "description": "Comprehensive market reach, local opportunity, competitor density, SWOT, risk factors, and unit pricing.",
+      "requiredContext": [
+        "business.name",
+        "business.category",
+        "business.location",
+        "business.capital",
+        "business.operations",
+        "profile.fullName",
+        "profile.experience",
+        "profile.skills"
+      ],
+      "outputSections": [
+        "market",
+        "opportunity",
+        "competition",
+        "swot",
+        "risks",
+        "pricing"
+      ]
+    },
+    "advisor": {
+      "endpoint": "/api/v1/ai/advisor/chat",
+      "description": "Conversational advisory with factual citations and confidence scoring for rural entrepreneurs.",
+      "requiredContext": [
+        "profile.fullName",
+        "profile.location",
+        "profile.availableCapital",
+        "business.name",
+        "business.category",
+        "business.location"
+      ],
+      "outputSections": [
+        "reply",
+        "evidence"
+      ]
+    },
+    "financeExplanation": {
+      "endpoint": "/api/v1/ai/finance/explain",
+      "description": "Qualitative explanation of deterministic project cost, margin safety, debt service ratio, and working capital strategy.",
+      "requiredContext": [
+        "business.name",
+        "plan.projectCost",
+        "plan.availableMargin",
+        "plan.loanAmount",
+        "plan.monthlyEMI",
+        "plan.schemeResult"
+      ],
+      "outputSections": [
+        "summary",
+        "points"
+      ]
+    },
+    "roadmap": {
+      "endpoint": "/api/v1/ai/roadmap/generate",
+      "description": "Tailored 4-phase chronological action roadmap with regulatory compliance, procurement, and launch milestones.",
+      "requiredContext": [
+        "business.name",
+        "business.category",
+        "business.location",
+        "business.capital",
+        "profile.experience"
+      ],
+      "phases": [
+        "Phase 1: Validation & Scheme Application (Weeks 1-4)",
+        "Phase 2: Licences, Approvals & Banking (Weeks 5-8)",
+        "Phase 3: Setup, Procurement & Trial Run (Weeks 9-14)",
+        "Phase 4: Commercial Launch & Market Linkage (Weeks 15+)"
+      ],
+      "outputSections": [
+        "businessName",
+        "location",
+        "totalEstimatedWeeks",
+        "phases"
+      ]
+    },
+    "comparison": {
+      "endpoint": "/api/v1/ai/business/compare",
+      "description": "Comparative strategic trade-off analysis between user venture and alternative rural micro-enterprises.",
+      "requiredContext": [
+        "userBusiness",
+        "benchmarkBusinesses"
+      ],
+      "outputSections": [
+        "verdict",
+        "tradeOffSummary",
+        "recommendations"
+      ]
+    },
+    "dashboardBriefing": {
+      "endpoint": "/api/v1/ai/dashboard/briefing",
+      "description": "Executive morning briefing for active entrepreneur summarizing readiness, immediate next step, and financial tip.",
+      "requiredContext": [
+        "profile.fullName",
+        "business.name",
+        "business.stage",
+        "business.capital"
+      ],
+      "outputSections": [
+        "headline",
+        "readinessAssessment",
+        "priorityAction",
+        "schemeHighlight",
+        "riskAdvisory"
+      ]
+    }
+  }
+}

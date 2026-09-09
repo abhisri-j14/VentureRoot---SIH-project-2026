@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import Link from "next/link";
-import { ArrowRight, PieChart, TrendingUp, Sparkles } from "lucide-react";
+import { ArrowRight, PieChart, TrendingUp, Sparkles, Compass, ShieldCheck, CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
+import apiClient from "@/lib/api/client";
 import { CountUp } from "@/components/ui/CountUp";
 import { motion } from "framer-motion";
 import businessesData from "@/data/businesses.json";
@@ -68,6 +69,7 @@ export default function DashboardPage() {
   const { user, fetchUser } = useAuthStore();
   const [mounted, setMounted] = useState(false);
 
+
   useEffect(() => {
     fetchUser();
     const timer = setTimeout(() => setMounted(true), 100);
@@ -92,6 +94,21 @@ export default function DashboardPage() {
   const userIncome = Number(profileData?.financial?.income) || 0;
 
   const hasBusiness = !!activeBusiness;
+  const [briefing, setBriefing] = useState<{ headline: string; readinessAssessment: string; priorityAction: string; schemeHighlight: string; riskAdvisory: string } | null>(null);
+  const [isLoadingBriefing, setIsLoadingBriefing] = useState(false);
+
+  useEffect(() => {
+    if (hasBusiness) {
+      setIsLoadingBriefing(true);
+      apiClient.get("/ai/dashboard/briefing")
+        .then((res: any) => {
+          const b = res?.data?.data?.briefing || res?.data?.briefing;
+          if (b) setBriefing(b);
+        })
+        .catch(err => console.warn("Dashboard briefing fetch error:", err))
+        .finally(() => setIsLoadingBriefing(false));
+    }
+  }, [hasBusiness]);
   const userMargin = Number(activeBusiness?.capital?.availableMargin || (activeBusiness as any)?.availableMargin || userCapital);
 
   // If user has a real business

@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Plus, ChevronDown, BarChart2, Leaf, Check } from "lucide-react";
+import { X, Plus, ChevronDown, BarChart2, Leaf, Check, Sparkles, Loader2, CheckCircle2 } from "lucide-react";
+import { useBusinessesComparison } from "@/lib/data/businesses";
+import apiClient from "@/lib/api/client";
 import { EditorialRadarChart } from "@/components/ui/charts";
 
 // ── Hardcoded business pool (replaces backend) ─────────────────────────────
-const ALL_BUSINESSES = [
+const BENCHMARK_BUSINESSES = [
   {
     id: "b1",
     name: "Dairy Farming & Milk Chilling",
@@ -88,7 +90,7 @@ const ALL_BUSINESSES = [
   },
 ];
 
-type Business = typeof ALL_BUSINESSES[0];
+export type Business = typeof BENCHMARK_BUSINESSES[0];
 
 // ── Dropdown component for business selection ──────────────────────────────
 const BusinessSelector = ({
@@ -151,7 +153,7 @@ const BusinessSelector = ({
         </div>
       ))}
 
-      {selected.length < ALL_BUSINESSES.length && (
+      {selected.length < allBusinesses.length && (
         <button
           className="flex items-center gap-2 border-2 border-dashed border-gray-300 rounded-lg px-3.5 py-2 font-sans text-[14px] font-semibold text-gray-500 hover:border-[#81cc87] hover:text-[#81cc87] transition-colors"
           onClick={onAdd}
@@ -172,10 +174,64 @@ const RowLabel = ({ label }: { label: string }) => (
 
 // ── Main component ─────────────────────────────────────────────────────────
 export const BusinessComparison = () => {
+  const { data: userBusinesses } = useBusinessesComparison();
+  const activeUserBiz = userBusinesses?.[0];
+
+  const candidatePool: Business[] = React.useMemo(() => {
+    if (!activeUserBiz) return BENCHMARK_BUSINESSES;
+    const userMargin = activeUserBiz.capital?.availableMargin || 50000;
+    const userRev = activeUserBiz.operations?.expectedRevenue || 35000;
+    const userCandidate: Business = {
+      id: activeUserBiz.id,
+      name: `${activeUserBiz.name} (Your Venture)`,
+      score: 88,
+      viability: "YOUR REGISTERED PLAN",
+      color: "#1E6702",
+      dot: "#1E6702",
+      financials: {
+        projectCost: `?${(userMargin * 10).toLocaleString("en-IN")}`,
+        margin10: `?${userMargin.toLocaleString("en-IN")}`,
+        sca: `?${(userMargin * 9).toLocaleString("en-IN")}`,
+      },
+      netProfitMargin: "24% ? 30%",
+      monthlyProfit: `?${userRev.toLocaleString("en-IN")} / month`,
+      breakEven: "4 Months",
+      localSaturation: "High Local Demand",
+      operationalComplexity: "Moderate (Standard Machinery)",
+      keyLocalRisk: "Working capital receivables and raw material price stability.",
+      radar: { feasibility: 88, marketDemand: 86, competition: 32, investment: 60, riskLevel: 28, localOpportunity: 90 },
+    };
+    return [userCandidate, ...BENCHMARK_BUSINESSES.filter(b => b.id !== activeUserBiz.id)];
+  }, [activeUserBiz]);
+
+  const [aiInsight, setAiInsight] = React.useState<{ verdict: string; tradeOffSummary: string; keyAdvantages?: string[]; recommendations?: string[] } | null>(null);
+  const [isLoadingAi, setIsLoadingAi] = React.useState(false);
+
+  const fetchAiComparison = async () => {
+    if (isLoadingAi) return;
+    setIsLoadingAi(true);
+    try {
+      const res: any = await apiClient.post("/ai/business/compare", {
+        businessId: activeUserBiz?.id,
+        benchmarkBusinesses: candidatePool.slice(0, 3).map(b => ({ name: b.name, financials: b.financials })),
+      });
+      const data = res?.data?.data?.comparison || res?.data?.comparison;
+      if (data) setAiInsight(data);
+    } catch (e) {
+      console.warn("AI comparison fetch error:", e);
+    } finally {
+      setIsLoadingAi(false);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchAiComparison();
+  }, [activeUserBiz?.id]);
+
   const [selectedIds, setSelectedIds] = useState<string[]>(["b1", "b2", "b3", "b4"]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const activeBiz = ALL_BUSINESSES.filter((b) => selectedIds.includes(b.id));
+  const activeBiz = candidatePool.filter((b) => selectedIds.includes(b.id));
 
   const handleToggle = (id: string) => {
     setSelectedIds((prev) =>
@@ -190,7 +246,7 @@ export const BusinessComparison = () => {
   };
 
   const handleAdd = () => {
-    const next = ALL_BUSINESSES.find((b) => !selectedIds.includes(b.id));
+    const next = candidatePool.find((b) => !selectedIds.includes(b.id));
     if (next) setSelectedIds((prev) => [...prev, next.id]);
   };
 
@@ -217,7 +273,7 @@ export const BusinessComparison = () => {
       <div onClick={(e) => e.stopPropagation()}>
         <BusinessSelector
           selected={activeBiz}
-          allBusinesses={ALL_BUSINESSES}
+          allBusinesses={candidatePool}
           onToggle={handleToggle}
           onAdd={handleAdd}
           onRemove={handleRemove}
