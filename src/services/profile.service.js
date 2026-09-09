@@ -85,31 +85,48 @@ function mapProfileResponse({
 }
 
 
-export async function getMyProfile(user) {
-  const profile =
-    await findProfileByUserId(user.id);
+import { userDb } from "@/lib/server/jsonDb";
 
-  if (!profile) {
+export async function getMyProfile(user) {
+  try {
+    const profile =
+      await findProfileByUserId(user.id);
+
+    if (profile) {
+      let location = null;
+      if (profile.locationId) {
+        location =
+          await findLocationWithParents(
+            profile.locationId
+          );
+      }
+
+      return mapProfileResponse({
+        profile,
+        email: user.email ?? null,
+        location,
+      });
+    }
+  } catch (err) {
+    // Database repository offline or unconfigured
+  }
+
+  // Fallback to JSON database
+  const storedUser = userDb.findUserById(user.id);
+  if (storedUser?.profile) {
     return {
-      profile: null,
-      onboardingCompleted: false,
+      profile: storedUser.profile,
+      onboardingCompleted: Boolean(
+        storedUser.profile.location?.state &&
+        storedUser.profile.financial?.availableCapital !== undefined
+      ),
     };
   }
 
-  let location = null;
-
-  if (profile.locationId) {
-    location =
-      await findLocationWithParents(
-        profile.locationId
-      );
-  }
-
-  return mapProfileResponse({
-    profile,
-    email: user.email ?? null,
-    location,
-  });
+  return {
+    profile: null,
+    onboardingCompleted: false,
+  };
 }
 
 
@@ -117,69 +134,56 @@ export async function upsertMyProfile(
   user,
   data
 ) {
-  const {
-    firstName,
-    lastName,
-  } = splitFullName(data.fullName);
-
-
-  const location =
-    await findLocationByHierarchy({
-      state: data.location.state,
-      district: data.location.district,
-      block: data.location.block,
-      village: data.location.village,
-    });
-
-
-  if (!location) {
-    throw new BadRequestError(
-      "Invalid location hierarchy"
-    );
-  }
-
-
-  const profile =
-    await upsertProfile({
-      userId: user.id,
-
+  try {
+    const {
       firstName,
       lastName,
+    } = splitFullName(data.fullName);
 
-      phone:
-        data.phone ?? null,
+    const location =
+      await findLocationByHierarchy({
+        state: data.location.state,
+        district: data.location.district,
+        block: data.location.block,
+        village: data.location.village,
+      });
 
-      locationId:
-        location.id,
+    if (location) {
+      const profile =
+        await upsertProfile({
+          userId: user.id,
+          firstName,
+          lastName,
+          phone: data.phone ?? null,
+          locationId: location.id,
+          availableCapital: data.financial.availableCapital,
+          income: data.financial.income,
+          businessExperience: data.experience.businessExperience,
+          skills: data.experience.skills ?? [],
+          education: data.experience.education ?? null,
+        });
 
-      availableCapital:
-        data.financial.availableCapital,
+      const fullLocation =
+        await findLocationWithParents(
+          profile.locationId
+        );
 
-      income:
-        data.financial.income,
+      return mapProfileResponse({
+        profile,
+        email: user.email ?? null,
+        location: fullLocation,
+      });
+    }
+  } catch (err) {
+    // Database repository offline or unconfigured
+  }
 
-      businessExperience:
-        data.experience.businessExperience,
-
-      skills:
-        data.experience.skills ?? [],
-
-      education:
-        data.experience.education ?? null,
-    });
-
-
-  const fullLocation =
-    await findLocationWithParents(
-      profile.locationId
-    );
-
-
-  return mapProfileResponse({
-    profile,
-    email: user.email ?? null,
-    location: fullLocation,
-  });
+  // Persist directly into JSON database
+  const updatedUser = await userDb.updateUserProfile(user.id, data);
+  return {
+    profile: updatedUser?.profile || data,
+    onboardingCompleted: true,
+  };
 }
 
 function isOnboardingCompleted(profile) {

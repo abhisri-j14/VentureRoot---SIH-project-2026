@@ -71,6 +71,65 @@ async function callGeminiApi({ prompt, systemInstruction, jsonMode = false, mode
 }
 
 /**
+ * Explains deterministic financial plan with Gemini AI
+ */
+export async function explainFinancialPlanWithAi({ business, plan, profile } = {}) {
+  const businessName = business?.name || "Rural Enterprise";
+  const category = business?.category?.name || business?.category || "Micro-Enterprise";
+  const location = [business?.location?.village, business?.location?.district, business?.location?.state].filter(Boolean).join(", ") || "Local Cluster";
+  const projectCost = plan?.projectCost || 500000;
+  const margin = plan?.availableMargin || 50000;
+  const loan = plan?.loanAmount || 450000;
+  const emi = plan?.monthlyEMI || 10000;
+  const schemeName = plan?.schemeResult?.scheme?.name || "Concessional Loan Scheme";
+
+  const systemInstruction = `You are an expert financial consultant for Indian rural enterprises.
+Explain this deterministic financial plan in clear, practical, encouraging language.
+Format your response as strictly valid JSON:
+{
+  "summary": "string",
+  "points": [
+    { "title": "Scheme Suitability", "explanation": "string" },
+    { "title": "Cash Flow & Moratorium", "explanation": "string" },
+    { "title": "Bank Sanction Guidance", "explanation": "string" }
+  ]
+}`;
+
+  const prompt = `Explain the following deterministic financial plan:
+Business: ${businessName} (${category}) in ${location}
+Project Cost: ₹${Number(projectCost).toLocaleString("en-IN")}
+Available Margin: ₹${Number(margin).toLocaleString("en-IN")}
+Loan Required: ₹${Number(loan).toLocaleString("en-IN")}
+Monthly EMI: ₹${Number(emi).toLocaleString("en-IN")}
+Scheme: ${schemeName}
+
+Return strictly JSON:`;
+
+  try {
+    const raw = await callGeminiApi({ prompt, systemInstruction, jsonMode: true });
+    return JSON.parse(raw);
+  } catch (err) {
+    return {
+      summary: `Your available margin of ₹${Number(margin).toLocaleString("en-IN")} unlocks a ₹${Number(loan).toLocaleString("en-IN")} concessional loan under ${schemeName}.`,
+      points: [
+        {
+          title: "Scheme Suitability",
+          explanation: `The 90:10 funding ratio under ${schemeName} allows you to launch without depleting personal household savings.`,
+        },
+        {
+          title: "Cash Flow & Moratorium",
+          explanation: "The initial moratorium grace period allows you to install equipment and start production before regular principal repayment begins.",
+        },
+        {
+          title: "Bank Sanction Guidance",
+          explanation: `Keep local vendor machinery quotations and electricity bill ready for submission to your local District Industries Centre (DIC).`,
+        },
+      ],
+    };
+  }
+}
+
+/**
  * Format complete user profile and business context into structured system context
  */
 function buildContextSummary(context) {

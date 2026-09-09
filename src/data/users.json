@@ -1,29 +1,36 @@
 {
-  "currentUser": {
-    "id": "user-ent-001",
-    "name": "Ravi Kumar",
-    "email": "ravi@example.com",
-    "roleLabel": "Entrepreneur",
-    "location": "Bankura, West Bengal"
-  },
-  "profile": {
-    "fullName": "Ravi Kumar",
-    "email": "ravi.kumar@example.com",
-    "phone": "+91 9876543210",
-    "location": {
-      "state": "Maharashtra",
-      "district": "Pune",
-      "block": "Khed",
-      "village": "Chakan"
-    },
-    "financial": {
-      "availableCapital": 500000,
-      "income": 25000
-    },
-    "experience": {
-      "businessExperience": "3-5 years",
-      "skills": "Agriculture, Supply Chain",
-      "education": "B.Com"
+  "users": [
+    {
+      "id": "usr_demo_rajesh",
+      "name": "Rajesh Verma",
+      "email": "rajesh.verma@example.com",
+      "passwordHash": "8fd5551e6d21d807e3a848b549937e5252a0b1972fbf373f38fd69452004b42f644bc155afbb7f00d7811dc4bc48335bb7a24431e5a0e436f66e523fad8be155",
+      "salt": "78d4f8dada3348990f93c9871084bfc6",
+      "roleLabel": "Entrepreneur",
+      "createdAt": "2026-09-09T12:00:00.000Z",
+      "profile": {
+        "fullName": "Rajesh Verma",
+        "email": "rajesh.verma@example.com",
+        "phone": "+91 9876543210",
+        "location": {
+          "state": "Uttar Pradesh",
+          "district": "Varanasi",
+          "block": "Arajiline",
+          "village": "Kashipur"
+        },
+        "financial": {
+          "availableCapital": 300000,
+          "income": 22000
+        },
+        "experience": {
+          "businessExperience": "3-5 years",
+          "skills": [
+            "Textile Weaving",
+            "Local Retail"
+          ],
+          "education": "Higher Secondary"
+        }
+      }
     }
-  }
+  ]
 }

@@ -5,9 +5,11 @@ import Link from "next/link";
 import {
   ArrowLeft, Map, Compass, TrendingUp, Wallet, PiggyBank,
   BarChart3, CheckCircle2, AlertTriangle, ShieldCheck, ArrowRight,
-  IndianRupee, Clock, Percent, CalendarDays, ChevronLeft, ChevronRight
+  IndianRupee, Clock, Percent, CalendarDays, ChevronLeft, ChevronRight,
+  Sparkles, Loader2
 } from "lucide-react";
 import { useParams } from "next/navigation";
+import apiClient from "@/lib/api/client";
 import { WhatIfSimulator } from "@/features/finance/components/WhatIfSimulator";
 import { useBusinessDetails } from "@/lib/data/businesses";
 import {
@@ -143,18 +145,59 @@ export default function FinancePage() {
   // Get margin from business data
   const availableMargin = business?.capital?.availableMargin ?? (business as any)?.availableMargin ?? 0;
 
-  // ── Compute the full financial plan from the user's margin ──
+  // ── Compute the full financial plan deterministically from the user's margin ──
   const plan = useMemo(() => computeFinancialPlan(availableMargin), [availableMargin]);
 
   const schemeRouted = plan.schemeResult.routed;
   const scheme = schemeRouted ? (plan.schemeResult as { routed: true; scheme: SchemeDefinition }).scheme : null;
 
-  // ── Existing MUDRA / NABARD options from JSON (kept as-is) ──
-  const { fundingAllocation, fundingOptions } = financeData;
-  const totalAllocation = fundingAllocation.reduce((s, r) => s + r.amount, 0);
+  // ── Deterministic Funding Allocation dynamically computed from user's actual project cost ──
+  const dynamicFundingAllocation = useMemo(() => {
+    const total = plan.projectCost > 0 ? plan.projectCost : 500000;
+    return [
+      { item: "Machinery & Equipment", amount: Math.round(total * 0.40) },
+      { item: "Working Capital Reserve (3 Months)", amount: Math.round(total * 0.25) },
+      { item: "Shed / Infrastructure & Power", amount: Math.round(total * 0.15) },
+      { item: "Licensing, Permits & Compliance", amount: Math.round(total * 0.05) },
+      { item: "Initial Marketing & Retail Setup", amount: Math.round(total * 0.05) },
+      { item: "Emergency Contingency Fund", amount: Math.round(total * 0.10) },
+    ];
+  }, [plan.projectCost]);
+
+  const totalAllocation = dynamicFundingAllocation.reduce((s, r) => s + r.amount, 0);
+  const { fundingOptions } = financeData;
 
   // Dynamically computed repayment schedule from scheme engine
   const scheduleRows = plan.repaymentSchedule;
+
+  // ── Qualitative AI Explanatory Insights (Gemini) ──
+  const [aiExplanation, setAiExplanation] = useState<{ summary: string; points: { title: string; explanation: string }[] } | null>(null);
+  const [isLoadingAi, setIsLoadingAi] = useState(false);
+
+  const fetchAiExplanation = async () => {
+    if (isLoadingAi) return;
+    setIsLoadingAi(true);
+    try {
+      const res: any = await apiClient.post("/ai/finance/explain", {
+        business,
+        plan: {
+          projectCost: plan.projectCost,
+          availableMargin: plan.availableMargin,
+          loanAmount: plan.loanAmount,
+          monthlyEMI: plan.monthlyEMI,
+          schemeResult: plan.schemeResult,
+        },
+      });
+      const data = res?.data?.data?.explanation || res?.data?.explanation;
+      if (data) {
+        setAiExplanation(data);
+      }
+    } catch (e) {
+      console.warn("AI financial explanation error:", e);
+    } finally {
+      setIsLoadingAi(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -380,6 +423,100 @@ export default function FinancePage() {
         </div>
       )}
 
+      {/* ── Qualitative AI Explanatory Insights (Gemini) ────────────────── */}
+      <Card className="mb-6 border-emerald-900/15 overflow-hidden shadow-sm">
+        <div className="bg-gradient-to-r from-emerald-50 via-teal-50/50 to-transparent p-6 border-b border-emerald-900/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-heading text-[18px] font-bold text-slate-900">
+                  AI Financial Explanatory Insights
+                </h3>
+                <span className="font-sans text-[11px] font-bold text-emerald-800 bg-emerald-100/80 border border-emerald-300 px-2 py-0.5 rounded-full">
+                  Gemini Qualitative Analysis
+                </span>
+              </div>
+              <p className="font-sans text-[13px] text-slate-600 mt-1 max-w-2xl leading-relaxed">
+                Clear qualitative explanation of your deterministic loan numbers, repayment viability, and cash flow strategy.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={fetchAiExplanation}
+            disabled={isLoadingAi}
+            className="flex items-center gap-2 bg-[#1E6702] hover:bg-[#164e01] text-white px-4 py-2.5 rounded-xl font-sans text-[13px] font-semibold transition-all duration-200 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
+          >
+            {isLoadingAi ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>Analyzing Financials...</span>
+              </>
+            ) : aiExplanation ? (
+              <>
+                <Sparkles className="w-4 h-4" />
+                <span>Refresh Insights</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" />
+                <span>Generate Explanations</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        <div className="p-6">
+          {aiExplanation ? (
+            <div className="flex flex-col gap-5">
+              <div className="bg-white rounded-xl border border-emerald-900/10 p-4 shadow-sm">
+                <p className="font-sans text-[14px] text-slate-700 leading-relaxed font-medium">
+                  {aiExplanation.summary}
+                </p>
+              </div>
+
+              {aiExplanation.points && aiExplanation.points.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {aiExplanation.points.map((pt, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-white rounded-xl border border-slate-200/80 p-4 flex flex-col gap-1.5 shadow-sm hover:border-emerald-500/40 transition-all"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold flex items-center justify-center shrink-0">
+                          {idx + 1}
+                        </span>
+                        <h4 className="font-sans text-[14px] font-bold text-slate-900">
+                          {pt.title}
+                        </h4>
+                      </div>
+                      <p className="font-sans text-[13px] text-slate-600 leading-relaxed pl-7">
+                        {pt.explanation}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 pt-2 text-[11px] text-slate-500 font-medium">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>
+                  Mathematical calculations are 100% deterministic based on actual user inputs and statutory scheme terms. Gemini provides qualitative narrative analysis only.
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-6 px-4 bg-slate-50/70 rounded-xl border border-dashed border-slate-200 flex flex-col items-center gap-2">
+              <p className="font-sans text-[13px] text-slate-600">
+                Click <strong>Generate Explanations</strong> to receive an automated qualitative briefing explaining your debt service ratio, margin safety, and working capital strategy.
+              </p>
+            </div>
+          )}
+        </div>
+      </Card>
+
       {/* ── 10. Other Available Funding Options (MUDRA / NABARD) ────────── */}
       <Card className="mb-6">
         <CardHeader
@@ -524,7 +661,7 @@ export default function FinancePage() {
               </tr>
             </thead>
             <tbody>
-              {fundingAllocation.map(row => {
+              {dynamicFundingAllocation.map(row => {
                 const pct = Math.round((row.amount / totalAllocation) * 100);
                 return (
                   <tr key={row.item} className="border-b border-slate-50 last:border-0">

@@ -1,4 +1,38 @@
 {
+  "items": [
+    {
+      "id": "biz_demo_001",
+      "userId": "usr_demo_rajesh",
+      "name": "Kashi Handloom Weaving Unit",
+      "category": "Textiles & Handicrafts",
+      "subcategory": "Handloom Weaving",
+      "description": "Semi-mechanized traditional handloom unit producing Banarasi sarees and fabrics for regional markets.",
+      "status": "Ready",
+      "location": {
+        "state": "Uttar Pradesh",
+        "district": "Varanasi",
+        "block": "Arajiline",
+        "village": "Kashipur"
+      },
+      "capital": {
+        "availableMargin": 120000,
+        "expectedInvestment": 450000,
+        "workingCapital": 40000
+      },
+      "operations": {
+        "expectedRevenue": 55000,
+        "expectedPrice": 1200,
+        "productionQuantity": 45
+      },
+      "resources": {
+        "land": "Work shed at homestead",
+        "equipment": "2 Pit looms and yarn bobbin winder",
+        "existingResources": "Grid electricity, artisan weaver network"
+      },
+      "createdAt": "2026-09-09T12:00:00.000Z",
+      "updatedAt": "2026-09-09T12:00:00.000Z"
+    }
+  ],
   "details": {
     "id": "123",
     "name": "Green Valley Dairy",
@@ -32,62 +66,233 @@
       "id": "b1",
       "name": "Dairy Farming",
       "values": {
-        "score": { "value": "82/100", "highlight": true, "evidence": { "type": "PREDICTION", "label": "High" } },
-        "demand": { "value": "High", "highlight": true, "evidence": { "type": "FACT", "label": "Verified" } },
-        "competition": { "value": "Moderate", "highlight": false, "evidence": { "type": "ESTIMATE", "label": "Local" } },
-        "investment": { "value": "₹5.5L", "highlight": false },
-        "revenue": { "value": "₹65k", "highlight": false, "evidence": { "type": "ESTIMATE", "label": "Projected" } },
-        "risk": { "value": "Low", "highlight": true },
-        "recommendedCapital": { "value": "₹4.8L", "highlight": false },
-        "potentialLoan": { "value": "₹4.2L", "highlight": false },
-        "localOpportunity": { "value": "Strong", "highlight": true, "evidence": { "type": "PREDICTION", "label": "AI" } }
+        "score": {
+          "value": "82/100",
+          "highlight": true,
+          "evidence": {
+            "type": "PREDICTION",
+            "label": "High"
+          }
+        },
+        "demand": {
+          "value": "High",
+          "highlight": true,
+          "evidence": {
+            "type": "FACT",
+            "label": "Verified"
+          }
+        },
+        "competition": {
+          "value": "Moderate",
+          "highlight": false,
+          "evidence": {
+            "type": "ESTIMATE",
+            "label": "Local"
+          }
+        },
+        "investment": {
+          "value": "₹5.5L",
+          "highlight": false
+        },
+        "revenue": {
+          "value": "₹65k",
+          "highlight": false,
+          "evidence": {
+            "type": "ESTIMATE",
+            "label": "Projected"
+          }
+        },
+        "risk": {
+          "value": "Low",
+          "highlight": true
+        },
+        "recommendedCapital": {
+          "value": "₹4.8L",
+          "highlight": false
+        },
+        "potentialLoan": {
+          "value": "₹4.2L",
+          "highlight": false
+        },
+        "localOpportunity": {
+          "value": "Strong",
+          "highlight": true,
+          "evidence": {
+            "type": "PREDICTION",
+            "label": "AI"
+          }
+        }
       }
     },
     {
       "id": "b2",
       "name": "Retail Store",
       "values": {
-        "score": { "value": "65/100", "highlight": false, "evidence": { "type": "PREDICTION", "label": "Moderate" } },
-        "demand": { "value": "Moderate", "highlight": false, "evidence": { "type": "ESTIMATE", "label": "Projected" } },
-        "competition": { "value": "High", "highlight": false, "evidence": { "type": "FACT", "label": "Verified" } },
-        "investment": { "value": "₹3.0L", "highlight": true },
-        "revenue": { "value": "₹45k", "highlight": false, "evidence": { "type": "ESTIMATE", "label": "Projected" } },
-        "risk": { "value": "Moderate", "highlight": false },
-        "recommendedCapital": { "value": "₹2.5L", "highlight": true },
-        "potentialLoan": { "value": "₹2.0L", "highlight": false },
-        "localOpportunity": { "value": "Average", "highlight": false, "evidence": { "type": "PREDICTION", "label": "AI" } }
+        "score": {
+          "value": "65/100",
+          "highlight": false,
+          "evidence": {
+            "type": "PREDICTION",
+            "label": "Moderate"
+          }
+        },
+        "demand": {
+          "value": "Moderate",
+          "highlight": false,
+          "evidence": {
+            "type": "ESTIMATE",
+            "label": "Projected"
+          }
+        },
+        "competition": {
+          "value": "High",
+          "highlight": false,
+          "evidence": {
+            "type": "FACT",
+            "label": "Verified"
+          }
+        },
+        "investment": {
+          "value": "₹3.0L",
+          "highlight": true
+        },
+        "revenue": {
+          "value": "₹45k",
+          "highlight": false,
+          "evidence": {
+            "type": "ESTIMATE",
+            "label": "Projected"
+          }
+        },
+        "risk": {
+          "value": "Moderate",
+          "highlight": false
+        },
+        "recommendedCapital": {
+          "value": "₹2.5L",
+          "highlight": true
+        },
+        "potentialLoan": {
+          "value": "₹2.0L",
+          "highlight": false
+        },
+        "localOpportunity": {
+          "value": "Average",
+          "highlight": false,
+          "evidence": {
+            "type": "PREDICTION",
+            "label": "AI"
+          }
+        }
       }
     },
     {
       "id": "b3",
       "name": "Tailoring",
       "values": {
-        "score": { "value": "71/100", "highlight": false, "evidence": { "type": "PREDICTION", "label": "Good" } },
-        "demand": { "value": "Stable", "highlight": false, "evidence": { "type": "ESTIMATE", "label": "Trend" } },
-        "competition": { "value": "Low", "highlight": true, "evidence": { "type": "FACT", "label": "Verified" } },
-        "investment": { "value": "₹1.5L", "highlight": true },
-        "revenue": { "value": "₹35k", "highlight": false, "evidence": { "type": "ESTIMATE", "label": "Projected" } },
-        "risk": { "value": "Low", "highlight": true },
-        "recommendedCapital": { "value": "₹1.2L", "highlight": true },
-        "potentialLoan": { "value": "₹0.8L", "highlight": true },
-        "localOpportunity": { "value": "Good", "highlight": true, "evidence": { "type": "PREDICTION", "label": "AI" } }
+        "score": {
+          "value": "71/100",
+          "highlight": false,
+          "evidence": {
+            "type": "PREDICTION",
+            "label": "Good"
+          }
+        },
+        "demand": {
+          "value": "Stable",
+          "highlight": false,
+          "evidence": {
+            "type": "ESTIMATE",
+            "label": "Trend"
+          }
+        },
+        "competition": {
+          "value": "Low",
+          "highlight": true,
+          "evidence": {
+            "type": "FACT",
+            "label": "Verified"
+          }
+        },
+        "investment": {
+          "value": "₹1.5L",
+          "highlight": true
+        },
+        "revenue": {
+          "value": "₹35k",
+          "highlight": false,
+          "evidence": {
+            "type": "ESTIMATE",
+            "label": "Projected"
+          }
+        },
+        "risk": {
+          "value": "Low",
+          "highlight": true
+        },
+        "recommendedCapital": {
+          "value": "₹1.2L",
+          "highlight": true
+        },
+        "potentialLoan": {
+          "value": "₹0.8L",
+          "highlight": true
+        },
+        "localOpportunity": {
+          "value": "Good",
+          "highlight": true,
+          "evidence": {
+            "type": "PREDICTION",
+            "label": "AI"
+          }
+        }
       }
     }
   ],
   "dashboard": {
     "capexBreakdown": [
-      { "name": "Equipment", "value": 400000 },
-      { "name": "Setup", "value": 150000 },
-      { "name": "Inventory", "value": 200000 },
-      { "name": "Working Capital", "value": 100000 }
+      {
+        "name": "Equipment",
+        "value": 400000
+      },
+      {
+        "name": "Setup",
+        "value": 150000
+      },
+      {
+        "name": "Inventory",
+        "value": 200000
+      },
+      {
+        "name": "Working Capital",
+        "value": 100000
+      }
     ],
     "demandTrend": [
-      { "month": "Jan", "demand": 60 },
-      { "month": "Feb", "demand": 65 },
-      { "month": "Mar", "demand": 75 },
-      { "month": "Apr", "demand": 82 },
-      { "month": "May", "demand": 88 },
-      { "month": "Jun", "demand": 95 }
+      {
+        "month": "Jan",
+        "demand": 60
+      },
+      {
+        "month": "Feb",
+        "demand": 65
+      },
+      {
+        "month": "Mar",
+        "demand": 75
+      },
+      {
+        "month": "Apr",
+        "demand": 82
+      },
+      {
+        "month": "May",
+        "demand": 88
+      },
+      {
+        "month": "Jun",
+        "demand": 95
+      }
     ]
   }
 }
