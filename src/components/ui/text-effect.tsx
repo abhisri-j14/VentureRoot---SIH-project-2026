@@ -16,7 +16,7 @@ export function TextEffect({ children, per = "char", preset = "fade", trigger = 
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: per === "char" ? 0.03 : 0.1,
+        staggerChildren: per === "char" ? 0.03 : 0.08,
       },
     },
   };
@@ -27,11 +27,31 @@ export function TextEffect({ children, per = "char", preset = "fade", trigger = 
   };
 
   const renderText = (text: string, keyPrefix: string) => {
-    const items = per === "char" ? text.split("") : text.split(" ");
-    return items.map((char, index) => (
-      <motion.span key={`${keyPrefix}-${index}`} variants={item} className="inline-block whitespace-pre">
-        {char === " " ? "\u00A0" : char}
-      </motion.span>
+    const words = text.split(" ");
+    
+    if (per === "word") {
+      return words.map((word, index) => (
+        <React.Fragment key={`${keyPrefix}-${index}`}>
+          <motion.span variants={item} className="inline-block whitespace-nowrap">
+            {word}
+          </motion.span>
+          {index < words.length - 1 && "\u00A0"}
+        </React.Fragment>
+      ));
+    }
+
+    // per === "char": wrap each word in whitespace-nowrap so words never split in the middle
+    return words.map((word, wIdx) => (
+      <React.Fragment key={`${keyPrefix}-w-${wIdx}`}>
+        <span className="inline-block whitespace-nowrap">
+          {word.split("").map((char, cIdx) => (
+            <motion.span key={`${keyPrefix}-${wIdx}-${cIdx}`} variants={item} className="inline-block">
+              {char}
+            </motion.span>
+          ))}
+        </span>
+        {wIdx < words.length - 1 && "\u00A0"}
+      </React.Fragment>
     ));
   };
 

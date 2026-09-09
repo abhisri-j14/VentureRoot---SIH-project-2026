@@ -2,32 +2,32 @@
   "users": [
     {
       "id": "usr_demo_rajesh",
-      "name": "Riya Sen",
+      "name": "Abhisri Jana",
       "email": "rajesh.verma@example.com",
       "passwordHash": "8fd5551e6d21d807e3a848b549937e5252a0b1972fbf373f38fd69452004b42f644bc155afbb7f00d7811dc4bc48335bb7a24431e5a0e436f66e523fad8be155",
       "salt": "78d4f8dada3348990f93c9871084bfc6",
       "roleLabel": "Entrepreneur",
       "createdAt": "2026-09-09T12:00:00.000Z",
       "profile": {
-        "fullName": "Riya Sen",
-        "email": "abhisri.j1412@gmail.com",
+        "fullName": "Abhisri Jana",
+        "email": "abhisri.jana1324@gmail.com",
         "phone": "06289597779",
         "location": {
-          "state": "West bengal",
-          "district": "Howrah"
+          "state": "west bengal",
+          "district": "kolkata"
         },
         "financial": {
-          "availableCapital": 500000,
-          "income": 100000
+          "availableCapital": 5000000,
+          "income": 500000
         },
         "experience": {
-          "businessExperience": "0-2 years",
+          "businessExperience": "None",
           "skills": [
-            "Sales"
+            "sales"
           ],
-          "education": "Graduate"
+          "education": "diploma"
         },
-        "updatedAt": "2026-09-09T16:00:59.557Z"
+        "updatedAt": "2026-09-09T16:31:44.609Z"
       }
     },
     {
@@ -70,6 +70,35 @@
       "profile": {
         "fullName": "abhisri.j1412",
         "email": "abhisri.j1412@gmail.com",
+        "phone": "",
+        "location": {
+          "state": "",
+          "district": "",
+          "block": "",
+          "village": ""
+        },
+        "financial": {
+          "availableCapital": 0,
+          "income": 0
+        },
+        "experience": {
+          "businessExperience": "None",
+          "skills": [],
+          "education": ""
+        }
+      }
+    },
+    {
+      "id": "usr_1788971465260_0cjzv",
+      "name": "abhisri.jana1324",
+      "email": "abhisri.jana1324@gmail.com",
+      "passwordHash": "ad3d4b2a04d2e66615c51b1a4f67c9a4299dc3ea44fd238d3b12417c50db6b32005687bfa93e9e22cbabf127b0f2ee3d6c654510e36122d40ac9d6f9fc799719",
+      "salt": "d6c8b9d742e31fcaa531e3de983dbbce",
+      "roleLabel": "Entrepreneur",
+      "createdAt": "2026-09-09T16:31:05.260Z",
+      "profile": {
+        "fullName": "abhisri.jana1324",
+        "email": "abhisri.jana1324@gmail.com",
         "phone": "",
         "location": {
           "state": "",

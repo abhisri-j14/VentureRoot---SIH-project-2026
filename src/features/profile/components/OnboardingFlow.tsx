@@ -28,7 +28,7 @@ export const OnboardingFlow = () => {
   const [showSearchResults, setShowSearchResults] = useState(false);
 
   // Search Results for autocomplete
-  const { data: MOCK_SEARCH_RESULTS } = useLocationSearch(searchTerm);
+  const { data: searchResults, isLoading: isSearchingLocations } = useLocationSearch(searchTerm);
 
   const activeUser = prototypeStorage.getCurrentUser();
   const authStoreUser = useAuthStore((state) => state.user);
@@ -56,7 +56,7 @@ export const OnboardingFlow = () => {
     },
   });
 
-  const handleSelectSearchResult = (result: typeof MOCK_SEARCH_RESULTS[0]) => {
+  const handleSelectSearchResult = (result: any) => {
     setValue("location.state", result.data.state, { shouldValidate: true });
     setValue("location.district", result.data.district, { shouldValidate: true });
     setValue("location.block", result.data.block, { shouldValidate: true });
@@ -240,22 +240,35 @@ export const OnboardingFlow = () => {
               </div>
               
               {showSearchResults && (
-                <div className="absolute top-full left-0 w-full mt-2 bg-white border border-black/5 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden z-20">
-                  <div className="p-3 font-sans text-[11px] uppercase tracking-wider font-semibold text-[#200813]/40 bg-gray-50 border-b border-black/5">
-                    Mock API: /locations/search?q={searchTerm}
+                <div className="absolute top-full left-0 w-full mt-2 bg-white border border-black/5 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] overflow-hidden z-20 max-h-72 overflow-y-auto">
+                  <div className="flex items-center justify-between px-4 py-2.5 font-sans text-[11px] uppercase tracking-wider font-semibold text-[#200813]/60 bg-gray-50 border-b border-black/5">
+                    <span>{t("onboarding.searchResults") || "Suggested Locations"}</span>
+                    {isSearchingLocations && (
+                      <span className="text-[#1E6702] font-normal normal-case animate-pulse flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#1E6702]"></span>
+                        Searching...
+                      </span>
+                    )}
                   </div>
-                  {MOCK_SEARCH_RESULTS.filter(r => r.label.toLowerCase().includes(searchTerm.toLowerCase())).map((result, idx) => (
+                  {searchResults.map((result, idx) => (
                     <button
                       key={idx}
                       type="button"
                       onClick={() => handleSelectSearchResult(result)}
-                      className="w-full text-left px-4 py-3 font-sans text-[14px] hover:bg-gray-50/80 border-b border-black/5 last:border-0 flex items-center gap-3 transition-colors"
+                      className="w-full text-left px-4 py-3 font-sans text-[14px] hover:bg-[#1E6702]/5 border-b border-black/5 last:border-0 flex items-start gap-3 transition-colors"
                     >
-                      <MapPin className="w-4 h-4 text-[#1E6702]/60 shrink-0" />
-                      <span className="truncate font-medium text-[#200813]/80">{result.label}</span>
+                      <MapPin className="w-4 h-4 text-[#1E6702] mt-0.5 shrink-0" />
+                      <div className="flex flex-col min-w-0">
+                        <span className="truncate font-medium text-[#200813]">{result.label}</span>
+                        {(result.data?.district || result.data?.state) && (
+                          <span className="text-[12px] text-[#200813]/50">
+                            {[result.data.village, result.data.district, result.data.state].filter(Boolean).join(" • ")}
+                          </span>
+                        )}
+                      </div>
                     </button>
                   ))}
-                  {MOCK_SEARCH_RESULTS.filter(r => r.label.toLowerCase().includes(searchTerm.toLowerCase())).length === 0 && (
+                  {!isSearchingLocations && searchResults.length === 0 && (
                     <div className="px-4 py-4 font-sans text-[14px] text-[#200813]/50 text-center">{t("onboarding.noLocs")}</div>
                   )}
                 </div>

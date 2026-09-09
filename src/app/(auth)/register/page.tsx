@@ -109,9 +109,9 @@ export default function RegisterPage() {
           </Link>
 
           <div className="mt-12 pointer-events-none z-10">
-            <div className="max-w-[380px] p-1">
+            <div className="max-w-[440px] p-1">
               <h2 className="font-heading text-[28px] font-medium italic text-[#FFFBE7] leading-[1.15] [text-shadow:_0_4px_24px_rgba(0,0,0,0.6)]">
-                <TextEffect per='char' preset='fade'>
+                <TextEffect per='word' preset='fade'>
                   Your idea deserves a clear path.
                 </TextEffect>
               </h2>

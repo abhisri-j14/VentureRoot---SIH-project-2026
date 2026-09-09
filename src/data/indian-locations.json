@@ -1,0 +1,776 @@
+[
+  {
+    "label": "Kolkata, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "Kolkata",
+      "block": "Kolkata",
+      "village": "Kolkata"
+    }
+  },
+  {
+    "label": "Howrah, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "Howrah",
+      "block": "Bally Jagachha",
+      "village": "Howrah"
+    }
+  },
+  {
+    "label": "Siliguri, Darjeeling, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "Darjeeling",
+      "block": "Matigara",
+      "village": "Siliguri"
+    }
+  },
+  {
+    "label": "Durgapur, Paschim Bardhaman, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "Paschim Bardhaman",
+      "block": "Faridpur Durgapur",
+      "village": "Durgapur"
+    }
+  },
+  {
+    "label": "Asansol, Paschim Bardhaman, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "Paschim Bardhaman",
+      "block": "Asansol",
+      "village": "Asansol"
+    }
+  },
+  {
+    "label": "Midnapore, West Midnapore, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "Paschim Medinipur",
+      "block": "Midnapore Sadar",
+      "village": "Midnapore"
+    }
+  },
+  {
+    "label": "Kharagpur, West Midnapore, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "Paschim Medinipur",
+      "block": "Kharagpur I",
+      "village": "Kharagpur"
+    }
+  },
+  {
+    "label": "Barasat, North 24 Parganas, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "North 24 Parganas",
+      "block": "Barasat I",
+      "village": "Barasat"
+    }
+  },
+  {
+    "label": "Burdwan, Purba Bardhaman, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "Purba Bardhaman",
+      "block": "Burdwan I",
+      "village": "Burdwan"
+    }
+  },
+  {
+    "label": "Malda, Malda District, West Bengal",
+    "data": {
+      "state": "West Bengal",
+      "district": "Malda",
+      "block": "English Bazar",
+      "village": "Malda"
+    }
+  },
+  {
+    "label": "West Bengal (State)",
+    "data": {
+      "state": "West Bengal",
+      "district": "Kolkata",
+      "block": "",
+      "village": ""
+    }
+  },
+  {
+    "label": "Pune City, Pune, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Pune",
+      "block": "Haveli",
+      "village": "Pune City"
+    }
+  },
+  {
+    "label": "Chakan, Khed, Pune, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Pune",
+      "block": "Khed",
+      "village": "Chakan"
+    }
+  },
+  {
+    "label": "Khadakwasla, Haveli, Pune, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Pune",
+      "block": "Haveli",
+      "village": "Khadakwasla"
+    }
+  },
+  {
+    "label": "Baramati, Pune, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Pune",
+      "block": "Baramati",
+      "village": "Baramati"
+    }
+  },
+  {
+    "label": "Pimpri-Chinchwad, Pune, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Pune",
+      "block": "Haveli",
+      "village": "Pimpri-Chinchwad"
+    }
+  },
+  {
+    "label": "Mumbai, Mumbai City, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Mumbai City",
+      "block": "South Mumbai",
+      "village": "Fort"
+    }
+  },
+  {
+    "label": "Andheri, Mumbai Suburban, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Mumbai Suburban",
+      "block": "Andheri",
+      "village": "Andheri West"
+    }
+  },
+  {
+    "label": "Bandra, Mumbai Suburban, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Mumbai Suburban",
+      "block": "Andheri",
+      "village": "Bandra"
+    }
+  },
+  {
+    "label": "Thane, Thane District, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Thane",
+      "block": "Thane",
+      "village": "Thane City"
+    }
+  },
+  {
+    "label": "Navi Mumbai, Thane, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Thane",
+      "block": "Navi Mumbai",
+      "village": "Vashi"
+    }
+  },
+  {
+    "label": "Nagpur, Nagpur District, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Nagpur",
+      "block": "Nagpur Urban",
+      "village": "Nagpur"
+    }
+  },
+  {
+    "label": "Nashik, Nashik District, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Nashik",
+      "block": "Nashik",
+      "village": "Nashik City"
+    }
+  },
+  {
+    "label": "Chhatrapati Sambhaji Nagar (Aurangabad), Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Aurangabad",
+      "block": "Aurangabad",
+      "village": "Aurangabad"
+    }
+  },
+  {
+    "label": "Kolhapur, Kolhapur District, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Kolhapur",
+      "block": "Karvir",
+      "village": "Kolhapur"
+    }
+  },
+  {
+    "label": "Solapur, Solapur District, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Solapur",
+      "block": "North Solapur",
+      "village": "Solapur"
+    }
+  },
+  {
+    "label": "Satara, Satara District, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Satara",
+      "block": "Satara",
+      "village": "Satara"
+    }
+  },
+  {
+    "label": "Sangli, Sangli District, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Sangli",
+      "block": "Miraj",
+      "village": "Sangli"
+    }
+  },
+  {
+    "label": "Ahmednagar, Ahmednagar District, Maharashtra",
+    "data": {
+      "state": "Maharashtra",
+      "district": "Ahmednagar",
+      "block": "Nagar",
+      "village": "Ahmednagar"
+    }
+  },
+  {
+    "label": "New Delhi, Central Delhi, Delhi",
+    "data": {
+      "state": "Delhi",
+      "district": "Central Delhi",
+      "block": "Chanakyapuri",
+      "village": "Connaught Place"
+    }
+  },
+  {
+    "label": "South Delhi, Delhi",
+    "data": {
+      "state": "Delhi",
+      "district": "South Delhi",
+      "block": "Hauz Khas",
+      "village": "Saket"
+    }
+  },
+  {
+    "label": "Noida, Gautam Buddha Nagar, Uttar Pradesh",
+    "data": {
+      "state": "Uttar Pradesh",
+      "district": "Gautam Buddha Nagar",
+      "block": "Bisrakh",
+      "village": "Noida"
+    }
+  },
+  {
+    "label": "Greater Noida, Gautam Buddha Nagar, Uttar Pradesh",
+    "data": {
+      "state": "Uttar Pradesh",
+      "district": "Gautam Buddha Nagar",
+      "block": "Dankaur",
+      "village": "Greater Noida"
+    }
+  },
+  {
+    "label": "Gurugram, Gurugram District, Haryana",
+    "data": {
+      "state": "Haryana",
+      "district": "Gurugram",
+      "block": "Gurugram",
+      "village": "Cyber City"
+    }
+  },
+  {
+    "label": "Faridabad, Faridabad District, Haryana",
+    "data": {
+      "state": "Haryana",
+      "district": "Faridabad",
+      "block": "Faridabad",
+      "village": "Faridabad"
+    }
+  },
+  {
+    "label": "Ghaziabad, Ghaziabad District, Uttar Pradesh",
+    "data": {
+      "state": "Uttar Pradesh",
+      "district": "Ghaziabad",
+      "block": "Ghaziabad",
+      "village": "Indirapuram"
+    }
+  },
+  {
+    "label": "Bengaluru, Bengaluru Urban, Karnataka",
+    "data": {
+      "state": "Karnataka",
+      "district": "Bengaluru Urban",
+      "block": "Bangalore South",
+      "village": "Koramangala"
+    }
+  },
+  {
+    "label": "Whitefield, Bengaluru Urban, Karnataka",
+    "data": {
+      "state": "Karnataka",
+      "district": "Bengaluru Urban",
+      "block": "Bangalore East",
+      "village": "Whitefield"
+    }
+  },
+  {
+    "label": "Mysuru, Mysuru District, Karnataka",
+    "data": {
+      "state": "Karnataka",
+      "district": "Mysuru",
+      "block": "Mysuru",
+      "village": "Mysuru"
+    }
+  },
+  {
+    "label": "Hubballi-Dharwad, Dharwad, Karnataka",
+    "data": {
+      "state": "Karnataka",
+      "district": "Dharwad",
+      "block": "Hubballi",
+      "village": "Hubballi"
+    }
+  },
+  {
+    "label": "Mangaluru, Dakshina Kannada, Karnataka",
+    "data": {
+      "state": "Karnataka",
+      "district": "Dakshina Kannada",
+      "block": "Mangaluru",
+      "village": "Mangaluru"
+    }
+  },
+  {
+    "label": "Chennai, Chennai District, Tamil Nadu",
+    "data": {
+      "state": "Tamil Nadu",
+      "district": "Chennai",
+      "block": "Mylapore",
+      "village": "T Nagar"
+    }
+  },
+  {
+    "label": "Coimbatore, Coimbatore District, Tamil Nadu",
+    "data": {
+      "state": "Tamil Nadu",
+      "district": "Coimbatore",
+      "block": "Coimbatore South",
+      "village": "Gandhipuram"
+    }
+  },
+  {
+    "label": "Madurai, Madurai District, Tamil Nadu",
+    "data": {
+      "state": "Tamil Nadu",
+      "district": "Madurai",
+      "block": "Madurai North",
+      "village": "Madurai"
+    }
+  },
+  {
+    "label": "Tiruchirappalli, Tiruchirappalli, Tamil Nadu",
+    "data": {
+      "state": "Tamil Nadu",
+      "district": "Tiruchirappalli",
+      "block": "Tiruchirappalli",
+      "village": "Trichy"
+    }
+  },
+  {
+    "label": "Salem, Salem District, Tamil Nadu",
+    "data": {
+      "state": "Tamil Nadu",
+      "district": "Salem",
+      "block": "Salem",
+      "village": "Salem"
+    }
+  },
+  {
+    "label": "Hyderabad, Hyderabad District, Telangana",
+    "data": {
+      "state": "Telangana",
+      "district": "Hyderabad",
+      "block": "Shaikpet",
+      "village": "Hitec City"
+    }
+  },
+  {
+    "label": "Secunderabad, Hyderabad District, Telangana",
+    "data": {
+      "state": "Telangana",
+      "district": "Hyderabad",
+      "block": "Secunderabad",
+      "village": "Secunderabad"
+    }
+  },
+  {
+    "label": "Warangal, Warangal Urban, Telangana",
+    "data": {
+      "state": "Telangana",
+      "district": "Warangal",
+      "block": "Warangal",
+      "village": "Hanamkonda"
+    }
+  },
+  {
+    "label": "Visakhapatnam, Visakhapatnam District, Andhra Pradesh",
+    "data": {
+      "state": "Andhra Pradesh",
+      "district": "Visakhapatnam",
+      "block": "Visakhapatnam Urban",
+      "village": "Visakhapatnam"
+    }
+  },
+  {
+    "label": "Vijayawada, Krishna District, Andhra Pradesh",
+    "data": {
+      "state": "Andhra Pradesh",
+      "district": "Krishna",
+      "block": "Vijayawada Urban",
+      "village": "Vijayawada"
+    }
+  },
+  {
+    "label": "Tirupati, Tirupati District, Andhra Pradesh",
+    "data": {
+      "state": "Andhra Pradesh",
+      "district": "Tirupati",
+      "block": "Tirupati Urban",
+      "village": "Tirupati"
+    }
+  },
+  {
+    "label": "Ahmedabad, Ahmedabad District, Gujarat",
+    "data": {
+      "state": "Gujarat",
+      "district": "Ahmedabad",
+      "block": "Ahmedabad City",
+      "village": "Navrangpura"
+    }
+  },
+  {
+    "label": "Surat, Surat District, Gujarat",
+    "data": {
+      "state": "Gujarat",
+      "district": "Surat",
+      "block": "Surat City",
+      "village": "Athwa"
+    }
+  },
+  {
+    "label": "Vadodara, Vadodara District, Gujarat",
+    "data": {
+      "state": "Gujarat",
+      "district": "Vadodara",
+      "block": "Vadodara",
+      "village": "Alkapuri"
+    }
+  },
+  {
+    "label": "Rajkot, Rajkot District, Gujarat",
+    "data": {
+      "state": "Gujarat",
+      "district": "Rajkot",
+      "block": "Rajkot",
+      "village": "Rajkot"
+    }
+  },
+  {
+    "label": "Jaipur, Jaipur District, Rajasthan",
+    "data": {
+      "state": "Rajasthan",
+      "district": "Jaipur",
+      "block": "Jaipur",
+      "village": "Malviya Nagar"
+    }
+  },
+  {
+    "label": "Jodhpur, Jodhpur District, Rajasthan",
+    "data": {
+      "state": "Rajasthan",
+      "district": "Jodhpur",
+      "block": "Jodhpur",
+      "village": "Jodhpur"
+    }
+  },
+  {
+    "label": "Udaipur, Udaipur District, Rajasthan",
+    "data": {
+      "state": "Rajasthan",
+      "district": "Udaipur",
+      "block": "Girwa",
+      "village": "Udaipur"
+    }
+  },
+  {
+    "label": "Kota, Kota District, Rajasthan",
+    "data": {
+      "state": "Rajasthan",
+      "district": "Kota",
+      "block": "Ladpura",
+      "village": "Kota"
+    }
+  },
+  {
+    "label": "Lucknow, Lucknow District, Uttar Pradesh",
+    "data": {
+      "state": "Uttar Pradesh",
+      "district": "Lucknow",
+      "block": "Lucknow",
+      "village": "Hazratganj"
+    }
+  },
+  {
+    "label": "Kanpur, Kanpur Nagar, Uttar Pradesh",
+    "data": {
+      "state": "Uttar Pradesh",
+      "district": "Kanpur Nagar",
+      "block": "Kanpur",
+      "village": "Civil Lines"
+    }
+  },
+  {
+    "label": "Varanasi, Varanasi District, Uttar Pradesh",
+    "data": {
+      "state": "Uttar Pradesh",
+      "district": "Varanasi",
+      "block": "Kashi Vidyapeeth",
+      "village": "Varanasi"
+    }
+  },
+  {
+    "label": "Agra, Agra District, Uttar Pradesh",
+    "data": {
+      "state": "Uttar Pradesh",
+      "district": "Agra",
+      "block": "Agra",
+      "village": "Agra"
+    }
+  },
+  {
+    "label": "Prayagraj (Allahabad), Uttar Pradesh",
+    "data": {
+      "state": "Uttar Pradesh",
+      "district": "Prayagraj",
+      "block": "Sadar",
+      "village": "Civil Lines"
+    }
+  },
+  {
+    "label": "Patna, Patna District, Bihar",
+    "data": {
+      "state": "Bihar",
+      "district": "Patna",
+      "block": "Patna Sadar",
+      "village": "Patna"
+    }
+  },
+  {
+    "label": "Bettiah, West Champaran, Bihar",
+    "data": {
+      "state": "Bihar",
+      "district": "West Champaran",
+      "block": "Bettiah",
+      "village": "Bettiah"
+    }
+  },
+  {
+    "label": "Motihari, East Champaran, Bihar",
+    "data": {
+      "state": "Bihar",
+      "district": "East Champaran",
+      "block": "Motihari",
+      "village": "Motihari"
+    }
+  },
+  {
+    "label": "Muzaffarpur, Muzaffarpur District, Bihar",
+    "data": {
+      "state": "Bihar",
+      "district": "Muzaffarpur",
+      "block": "Mushahari",
+      "village": "Muzaffarpur"
+    }
+  },
+  {
+    "label": "Gaya, Gaya District, Bihar",
+    "data": {
+      "state": "Bihar",
+      "district": "Gaya",
+      "block": "Gaya Town",
+      "village": "Gaya"
+    }
+  },
+  {
+    "label": "Indore, Indore District, Madhya Pradesh",
+    "data": {
+      "state": "Madhya Pradesh",
+      "district": "Indore",
+      "block": "Indore",
+      "village": "Vijay Nagar"
+    }
+  },
+  {
+    "label": "Bhopal, Bhopal District, Madhya Pradesh",
+    "data": {
+      "state": "Madhya Pradesh",
+      "district": "Bhopal",
+      "block": "Phanda",
+      "village": "MP Nagar"
+    }
+  },
+  {
+    "label": "Gwalior, Gwalior District, Madhya Pradesh",
+    "data": {
+      "state": "Madhya Pradesh",
+      "district": "Gwalior",
+      "block": "Gwalior",
+      "village": "Gwalior"
+    }
+  },
+  {
+    "label": "Jabalpur, Jabalpur District, Madhya Pradesh",
+    "data": {
+      "state": "Madhya Pradesh",
+      "district": "Jabalpur",
+      "block": "Jabalpur",
+      "village": "Jabalpur"
+    }
+  },
+  {
+    "label": "Kochi, Ernakulam, Kerala",
+    "data": {
+      "state": "Kerala",
+      "district": "Ernakulam",
+      "block": "Kanayannur",
+      "village": "Kochi"
+    }
+  },
+  {
+    "label": "Thiruvananthapuram, Kerala",
+    "data": {
+      "state": "Kerala",
+      "district": "Thiruvananthapuram",
+      "block": "Thiruvananthapuram",
+      "village": "Trivandrum"
+    }
+  },
+  {
+    "label": "Kozhikode, Kozhikode District, Kerala",
+    "data": {
+      "state": "Kerala",
+      "district": "Kozhikode",
+      "block": "Kozhikode",
+      "village": "Calicut"
+    }
+  },
+  {
+    "label": "Chandigarh, Chandigarh UT",
+    "data": {
+      "state": "Chandigarh",
+      "district": "Chandigarh",
+      "block": "Sector 17",
+      "village": "Chandigarh"
+    }
+  },
+  {
+    "label": "Ludhiana, Ludhiana District, Punjab",
+    "data": {
+      "state": "Punjab",
+      "district": "Ludhiana",
+      "block": "Ludhiana West",
+      "village": "Ludhiana"
+    }
+  },
+  {
+    "label": "Amritsar, Amritsar District, Punjab",
+    "data": {
+      "state": "Punjab",
+      "district": "Amritsar",
+      "block": "Amritsar II",
+      "village": "Amritsar"
+    }
+  },
+  {
+    "label": "Bhubaneswar, Khordha, Odisha",
+    "data": {
+      "state": "Odisha",
+      "district": "Khordha",
+      "block": "Bhubaneswar",
+      "village": "Bhubaneswar"
+    }
+  },
+  {
+    "label": "Cuttack, Cuttack District, Odisha",
+    "data": {
+      "state": "Odisha",
+      "district": "Cuttack",
+      "block": "Cuttack Sadar",
+      "village": "Cuttack"
+    }
+  },
+  {
+    "label": "Guwahati, Kamrup Metropolitan, Assam",
+    "data": {
+      "state": "Assam",
+      "district": "Kamrup Metropolitan",
+      "block": "Guwahati",
+      "village": "Dispur"
+    }
+  },
+  {
+    "label": "Ranchi, Ranchi District, Jharkhand",
+    "data": {
+      "state": "Jharkhand",
+      "district": "Ranchi",
+      "block": "Kanke",
+      "village": "Ranchi"
+    }
+  },
+  {
+    "label": "Jamshedpur, East Singhbhum, Jharkhand",
+    "data": {
+      "state": "Jharkhand",
+      "district": "East Singhbhum",
+      "block": "Golmuri Cum Jugsalai",
+      "village": "Bistupur"
+    }
+  },
+  {
+    "label": "Panaji, North Goa, Goa",
+    "data": {
+      "state": "Goa",
+      "district": "North Goa",
+      "block": "Tiswadi",
+      "village": "Panaji"
+    }
+  }
+]

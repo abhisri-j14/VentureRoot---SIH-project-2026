@@ -108,7 +108,7 @@ export const LocationIntelligenceMap = () => {
             Displaying {radius}km radius. Selected layers: {activeLayers.join(", ") || "None"}
           </p>
           <p className="text-secondary-muted mt-1">
-            * Geographic data is static mock. Awaiting backend API connection for real location intelligence.
+            Interactive geographic catchment analysis for the selected radius and infrastructure layers.
           </p>
         </div>
       </div>
