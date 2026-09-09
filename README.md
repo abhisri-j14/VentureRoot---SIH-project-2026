@@ -173,4 +173,3 @@ frontend/
 ## 👥 Contributors & SIH 2026 Team
 
 Developed with ❤️ for **Smart India Hackathon (SIH) 2026**.  
-*Repository maintained by [abhisri-j14](https://github.com/abhisri-j14).*
