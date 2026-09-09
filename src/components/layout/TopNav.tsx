@@ -96,7 +96,7 @@ export const TopNav = () => {
 
             return (
               <Link 
-                key={link.href}
+                key={link.tKey}
                 href={link.href} 
                 onMouseEnter={() => setHoveredIndex(idx)}
                 className={`group relative px-4 py-2 text-[13px] font-semibold transition-all duration-300 active:scale-[0.97] flex items-center gap-2 rounded-full ${isActive ? "text-[#FFFBE7]" : "text-white/80 hover:text-white"}`}
@@ -229,7 +229,7 @@ export const TopNav = () => {
 
                 return (
                   <motion.div
-                    key={link.href}
+                    key={link.tKey}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 + 0.1, duration: 0.2 }}
