@@ -2,32 +2,32 @@
   "users": [
     {
       "id": "usr_demo_rajesh",
-      "name": "Sri",
+      "name": "Riya Sen",
       "email": "rajesh.verma@example.com",
       "passwordHash": "8fd5551e6d21d807e3a848b549937e5252a0b1972fbf373f38fd69452004b42f644bc155afbb7f00d7811dc4bc48335bb7a24431e5a0e436f66e523fad8be155",
       "salt": "78d4f8dada3348990f93c9871084bfc6",
       "roleLabel": "Entrepreneur",
       "createdAt": "2026-09-09T12:00:00.000Z",
       "profile": {
-        "fullName": "Sri",
-        "email": "abhisri.jana14@gmail.com",
+        "fullName": "Riya Sen",
+        "email": "abhisri.j1412@gmail.com",
         "phone": "06289597779",
         "location": {
           "state": "West bengal",
-          "district": "Kolkata"
+          "district": "Howrah"
         },
         "financial": {
-          "availableCapital": 50000,
-          "income": 20000
+          "availableCapital": 500000,
+          "income": 100000
         },
         "experience": {
-          "businessExperience": "None",
+          "businessExperience": "0-2 years",
           "skills": [
             "Sales"
           ],
-          "education": "graduate"
+          "education": "Graduate"
         },
-        "updatedAt": "2026-09-09T15:33:45.023Z"
+        "updatedAt": "2026-09-09T16:00:59.557Z"
       }
     },
     {
@@ -41,6 +41,35 @@
       "profile": {
         "fullName": "abhisri.jana14",
         "email": "abhisri.jana14@gmail.com",
+        "phone": "",
+        "location": {
+          "state": "",
+          "district": "",
+          "block": "",
+          "village": ""
+        },
+        "financial": {
+          "availableCapital": 0,
+          "income": 0
+        },
+        "experience": {
+          "businessExperience": "None",
+          "skills": [],
+          "education": ""
+        }
+      }
+    },
+    {
+      "id": "usr_1788969590787_908yk",
+      "name": "abhisri.j1412",
+      "email": "abhisri.j1412@gmail.com",
+      "passwordHash": "09a0fa69626bb2b06422bd3db97a508674241e3204a6e6cce9df6739bfb2624f9fd367b2bb5c0a3ab8decffa60d940996028131531244ddc4a9932a0be28da3b",
+      "salt": "5a843c9711fa468a3bbaeaebbe543f36",
+      "roleLabel": "Entrepreneur",
+      "createdAt": "2026-09-09T15:59:50.787Z",
+      "profile": {
+        "fullName": "abhisri.j1412",
+        "email": "abhisri.j1412@gmail.com",
         "phone": "",
         "location": {
           "state": "",

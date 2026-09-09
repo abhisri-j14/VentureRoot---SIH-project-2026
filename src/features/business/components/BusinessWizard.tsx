@@ -35,6 +35,7 @@ export const BusinessWizard = () => {
     handleSubmit,
     trigger,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<BusinessFormValues>({
     resolver: zodResolver(businessFormSchema),
@@ -239,29 +240,70 @@ export const BusinessWizard = () => {
                 {currentStep === 1 && (
                   <div className="flex flex-col gap-6 animate-in fade-in duration-300">
                     <div>
-                      <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">{t("business.wizard.cat")}</label>
+                      <label className="block font-sans text-[14px] font-bold text-gray-800 mb-2">
+                        {t("business.wizard.cat") || "Business Category"}
+                      </label>
+                      
+                      {/* Dropdown with Common Sectors & Custom Option */}
                       <select
-                        {...register("categoryId")}
-                        className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium"
+                        value={isCustomCategory ? "other" : (formValues.categoryId || "")}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (val === "other") {
+                            setIsCustomCategory(true);
+                            setValue("categoryId", "");
+                          } else {
+                            setIsCustomCategory(false);
+                            setValue("categoryId", val, { shouldValidate: true });
+                          }
+                        }}
+                        className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium mb-3"
                       >
-                        <option value="">{t("business.wizard.selectCat")}</option>
-                        <option value="dairy">Dairy</option>
-                        <option value="retail">Retail</option>
-                        <option value="tailoring">Tailoring</option>
+                        <option value="">{t("business.wizard.selectCat") || "Select a category..."}</option>
+                        <option value="Dairy & Animal Husbandry">Dairy & Animal Husbandry</option>
+                        <option value="Retail & Kirana Store">Retail & Kirana Store</option>
+                        <option value="Tailoring & Garment Manufacturing">Tailoring & Garment Manufacturing</option>
+                        <option value="Handloom & Banarasi Weaving">Handloom & Banarasi Weaving</option>
+                        <option value="Food Processing & Spices">Food Processing & Spices</option>
+                        <option value="Poultry & Agro-Farming">Poultry & Agro-Farming</option>
+                        <option value="Handicrafts & Rural Artisans">Handicrafts & Rural Artisans</option>
+                        <option value="Electrical & Solar Services">Electrical & Solar Services</option>
+                        <option value="other">Other (Enter your own custom choice)...</option>
                       </select>
-                      {errors.categoryId && <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">{errors.categoryId.message}</p>}
+
+                      {/* Custom Category Input with Placeholder */}
+                      <div className="mt-2">
+                        <label className="block font-sans text-[12px] font-semibold text-gray-700 mb-1.5">
+                          Or type your own custom sector / enterprise idea:
+                        </label>
+                        <input
+                          type="text"
+                          value={formValues.categoryId || ""}
+                          onChange={(e) => {
+                            setValue("categoryId", e.target.value, { shouldValidate: true });
+                            setIsCustomCategory(true);
+                          }}
+                          placeholder="e.g. Honey Processing, Solar Inverter Repair, Pottery & Handicrafts, Bamboo Crafts..."
+                          className="w-full rounded-xl border border-gray-200 p-4 bg-white focus:bg-white focus:border-[#81cc87] focus:ring-1 focus:ring-[#81cc87] transition-all outline-none font-sans text-[14px] font-medium placeholder:text-gray-400"
+                        />
+                      </div>
+
+                      {errors.categoryId && (
+                        <p className="text-red-500 font-sans text-[12px] mt-2 font-medium">
+                          {errors.categoryId.message}
+                        </p>
+                      )}
                     </div>
 
                     <div className="bg-[#f9faeb] rounded-xl p-4 flex gap-3 items-start border border-[#81cc87]/10">
                       <Info className="w-5 h-5 text-[#81cc87] shrink-0 mt-0.5" />
                       <p className="font-sans text-[14px] text-[#81cc87] font-medium leading-relaxed">
-                        Choose the category that matches your primary business activity.<br/>
-                        This helps us provide more accurate scheme recommendations and market insights.
+                        Choose from common rural sectors above or type your own custom enterprise idea.<br/>
+                        Gemini AI will automatically customize market feasibility, government schemes, and launch roadmap to your exact choice.
                       </p>
                     </div>
                   </div>
                 )}
-
                 {/* STEP 2 */}
                 {currentStep === 2 && (
                   <div className="flex flex-col gap-6 animate-in fade-in duration-300">
