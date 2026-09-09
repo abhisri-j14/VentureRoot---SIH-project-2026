@@ -24,6 +24,7 @@ export const BusinessWizard = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
   const router = useRouter();
 
   const activeUser = prototypeStorage.getCurrentUser();

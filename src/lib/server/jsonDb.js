@@ -259,13 +259,14 @@ export const businessDb = {
     const raw = readLocalJson("businesses.json", { items: [] });
     const items = Array.isArray(raw.items) ? raw.items : [];
 
-    const businessTitle = data.name || data.businessName || "My Rural Enterprise";
+    const categoryTitle = data.category || data.categoryId || data.industry || "General Enterprise";
+    const businessTitle = data.name || data.businessName || `${categoryTitle} Enterprise`;
     const newBusiness = {
       id: data.id || `biz_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
       userId,
       name: businessTitle,
       businessName: businessTitle,
-      category: data.category || data.industry || "General Enterprise",
+      category: categoryTitle,
       subcategory: data.subcategory || "",
       description: data.description || "Micro-enterprise plan.",
       stage: data.stage || "Ideation",
