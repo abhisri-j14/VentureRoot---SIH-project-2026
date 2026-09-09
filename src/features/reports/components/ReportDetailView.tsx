@@ -62,10 +62,10 @@ export const ReportDetailView = ({ report }: ReportDetailViewProps) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const [activeSection, setActiveSection] = useState(1);
 
-  // Data mapping
+  // Data mapping: use user's dynamic business inputs with safe fallback
   const fd = report.feasibilityData as any;
-  const capital = businessesData.details.capital;
-  const operations = businessesData.details.operations;
+  const capital = report.capital || (report.feasibilityData as any)?.capital || businessesData.details.capital;
+  const operations = report.operations || (report.feasibilityData as any)?.operations || businessesData.details.operations;
 
   const handleDownload = () => {
     window.print();

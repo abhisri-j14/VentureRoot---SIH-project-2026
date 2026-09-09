@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { DATA_SOURCE } from "./source";
 import { businessApi } from "@/features/business/api/businessApi";
 import { BusinessDetails } from "@/features/business/components/BusinessDetailsView";
@@ -10,40 +10,68 @@ export const useBusinessesComparison = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    if (DATA_SOURCE === "database") {
-      businessApi
-        .list()
-        .then((res: any) => {
-          const list =
-            res?.data?.businesses ||
-            res?.data?.data?.businesses ||
-            res?.data?.items ||
-            res?.items ||
-            [];
-          setData(list);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setError(err);
-          setData([]);
-          setIsLoading(false);
-        });
+  const loadBusinesses = useCallback(() => {
+    // 1. Prototype storage check first (immediate, sync)
+    const activeUser = prototypeStorage.getCurrentUser();
+    let localBusinesses = activeUser ? prototypeStorage.getBusinesses(activeUser.id) : [];
+    if (!localBusinesses || localBusinesses.length === 0) {
+      localBusinesses = prototypeStorage.getBusinesses();
+    }
+
+    if (localBusinesses && localBusinesses.length > 0) {
+      setData(localBusinesses);
+      setIsLoading(false);
       return;
     }
 
-    // Prototype storage mode: load active user's actual businesses
-    const activeUser = prototypeStorage.getCurrentUser();
-    if (activeUser) {
-      const userBusinesses = prototypeStorage.getBusinesses(activeUser.id);
-      setData(userBusinesses);
-    } else {
-      setData([]);
-    }
-    setIsLoading(false);
+    // 2. Fetch from backend API
+    businessApi
+      .list()
+      .then((res: any) => {
+        const list =
+          res?.data?.businesses ||
+          res?.data?.data?.businesses ||
+          res?.data?.items ||
+          res?.items ||
+          [];
+        if (list.length > 0) {
+          setData(list);
+        } else if (localBusinesses && localBusinesses.length > 0) {
+          setData(localBusinesses);
+        } else {
+          setData([]);
+        }
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        if (localBusinesses && localBusinesses.length > 0) {
+          setData(localBusinesses);
+        } else {
+          setError(err);
+          setData([]);
+        }
+        setIsLoading(false);
+      });
   }, []);
 
-  return { data, isLoading, error };
+  useEffect(() => {
+    loadBusinesses();
+
+    if (typeof window !== "undefined") {
+      const handleUpdate = () => loadBusinesses();
+      window.addEventListener("ventureroot_business_updated", handleUpdate);
+      window.addEventListener("storage", handleUpdate);
+      window.addEventListener("focus", handleUpdate);
+
+      return () => {
+        window.removeEventListener("ventureroot_business_updated", handleUpdate);
+        window.removeEventListener("storage", handleUpdate);
+        window.removeEventListener("focus", handleUpdate);
+      };
+    }
+  }, [loadBusinesses]);
+
+  return { data, isLoading, error, refresh: loadBusinesses };
 };
 
 export const useBusinessDetails = (id: string) => {
@@ -51,15 +79,38 @@ export const useBusinessDetails = (id: string) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    if (DATA_SOURCE === "database") {
-      if (!id || id === "123") {
-        setData(null);
+  const loadDetails = useCallback(() => {
+    const targetId = id === "123" || id === "latest" || id === "active" ? "" : id;
+
+    // 1. Check prototype storage
+    if (targetId) {
+      const stored = prototypeStorage.getBusinessById(targetId);
+      if (stored) {
+        setData(stored);
         setIsLoading(false);
         return;
       }
+    }
+
+    // Fallback to active business in storage
+    const active = prototypeStorage.getActiveBusiness();
+    if (active) {
+      setData(active);
+      setIsLoading(false);
+      return;
+    }
+
+    const all = prototypeStorage.getBusinesses();
+    if (all.length > 0) {
+      setData(all[0]);
+      setIsLoading(false);
+      return;
+    }
+
+    // 2. Try backend API if available
+    if (targetId) {
       businessApi
-        .get(id)
+        .get(targetId)
         .then((res: any) => {
           const details =
             res?.data?.business ||
@@ -74,33 +125,26 @@ export const useBusinessDetails = (id: string) => {
           setData(null);
           setIsLoading(false);
         });
-      return;
+    } else {
+      setData(null);
+      setIsLoading(false);
     }
-
-    // Prototype storage mode: look up by ID
-    if (id) {
-      const stored = prototypeStorage.getBusinessById(id);
-      if (stored) {
-        setData(stored);
-        setIsLoading(false);
-        return;
-      }
-
-      // Check if active user has any business
-      const activeUser = prototypeStorage.getCurrentUser();
-      if (activeUser) {
-        const userBusinesses = prototypeStorage.getBusinesses(activeUser.id);
-        if (userBusinesses.length > 0) {
-          setData(userBusinesses[0]);
-          setIsLoading(false);
-          return;
-        }
-      }
-    }
-
-    setData(null);
-    setIsLoading(false);
   }, [id]);
+
+  useEffect(() => {
+    loadDetails();
+
+    if (typeof window !== "undefined") {
+      const handleUpdate = () => loadDetails();
+      window.addEventListener("ventureroot_business_updated", handleUpdate);
+      window.addEventListener("storage", handleUpdate);
+
+      return () => {
+        window.removeEventListener("ventureroot_business_updated", handleUpdate);
+        window.removeEventListener("storage", handleUpdate);
+      };
+    }
+  }, [loadDetails]);
 
   return { data, isLoading, error };
 };

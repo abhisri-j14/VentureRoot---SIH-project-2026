@@ -7,6 +7,7 @@ import { useTranslation } from "@/features/i18n/hooks/useTranslation";
 import { LanguageSwitcher } from "@/features/i18n/components/LanguageSwitcher";
 import { useProfile } from "@/lib/data/users";
 import { useBusinessesComparison } from "@/lib/data/businesses";
+import { prototypeStorage } from "@/lib/storage/prototypeStorage";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -44,10 +45,34 @@ export const TopNav = () => {
     };
   }, []);
 
-  const activeBusiness = businesses?.[0];
-  const businessBase = activeBusiness?.id ? `/business/${activeBusiness.id}` : "/business/create";
-  const financeBase = activeBusiness?.id ? `/business/${activeBusiness.id}/finance` : "/business/create";
-  const feasibilityBase = activeBusiness?.id ? `/business/${activeBusiness.id}/feasibility` : "/business/create";
+  // Proactively resolve active business ID from current URL, comparison hook, or prototype storage
+  const pathParts = pathname?.split("/").filter(Boolean) || [];
+  let urlBusinessId: string | null = null;
+  if (pathParts[0] === "business" && pathParts[1] && pathParts[1] !== "create" && pathParts[1] !== "compare") {
+    urlBusinessId = pathParts[1];
+  }
+
+  const [storedBizId, setStoredBizId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const updateActiveId = () => {
+      const active = prototypeStorage.getActiveBusinessId();
+      setStoredBizId(active);
+    };
+    updateActiveId();
+
+    window.addEventListener("ventureroot_business_updated", updateActiveId);
+    window.addEventListener("storage", updateActiveId);
+    return () => {
+      window.removeEventListener("ventureroot_business_updated", updateActiveId);
+      window.removeEventListener("storage", updateActiveId);
+    };
+  }, []);
+
+  const effectiveBusinessId = urlBusinessId || businesses?.[0]?.id || storedBizId;
+  const businessBase = effectiveBusinessId ? `/business/${effectiveBusinessId}` : "/business/create";
+  const financeBase = effectiveBusinessId ? `/business/${effectiveBusinessId}/finance` : "/business/create";
+  const feasibilityBase = effectiveBusinessId ? `/business/${effectiveBusinessId}/feasibility` : "/business/create";
 
   const NAV_ITEMS = [
     { href: "/dashboard", tKey: "nav.dashboard", icon: Home },

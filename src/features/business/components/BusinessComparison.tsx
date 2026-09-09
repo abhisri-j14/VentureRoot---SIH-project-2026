@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { X, Plus, ChevronDown, BarChart2, Leaf, Check, Sparkles, Loader2, CheckCircle2 } from "lucide-react";
 import { useBusinessesComparison } from "@/lib/data/businesses";
+import { prototypeStorage } from "@/lib/storage/prototypeStorage";
 import apiClient from "@/lib/api/client";
 import { EditorialRadarChart } from "@/components/ui/charts";
 
@@ -175,7 +176,22 @@ const RowLabel = ({ label }: { label: string }) => (
 // ── Main component ─────────────────────────────────────────────────────────
 export const BusinessComparison = () => {
   const { data: userBusinesses } = useBusinessesComparison();
-  const activeUserBiz = userBusinesses?.[0];
+  const [storedBiz, setStoredBiz] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    const checkActive = () => {
+      setStoredBiz(prototypeStorage.getActiveBusiness());
+    };
+    checkActive();
+    window.addEventListener("ventureroot_business_updated", checkActive);
+    window.addEventListener("storage", checkActive);
+    return () => {
+      window.removeEventListener("ventureroot_business_updated", checkActive);
+      window.removeEventListener("storage", checkActive);
+    };
+  }, []);
+
+  const activeUserBiz = userBusinesses?.[0] || storedBiz;
 
   const candidatePool: Business[] = React.useMemo(() => {
     if (!activeUserBiz) return BENCHMARK_BUSINESSES;
@@ -189,12 +205,12 @@ export const BusinessComparison = () => {
       color: "#1E6702",
       dot: "#1E6702",
       financials: {
-        projectCost: `?${(userMargin * 10).toLocaleString("en-IN")}`,
-        margin10: `?${userMargin.toLocaleString("en-IN")}`,
-        sca: `?${(userMargin * 9).toLocaleString("en-IN")}`,
+        projectCost: `₹${(userMargin * 10).toLocaleString("en-IN")}`,
+        margin10: `₹${userMargin.toLocaleString("en-IN")}`,
+        sca: `₹${(userMargin * 9).toLocaleString("en-IN")}`,
       },
-      netProfitMargin: "24% ? 30%",
-      monthlyProfit: `?${userRev.toLocaleString("en-IN")} / month`,
+      netProfitMargin: "24% – 30%",
+      monthlyProfit: `₹${userRev.toLocaleString("en-IN")} / month`,
       breakEven: "4 Months",
       localSaturation: "High Local Demand",
       operationalComplexity: "Moderate (Standard Machinery)",
@@ -228,7 +244,18 @@ export const BusinessComparison = () => {
     fetchAiComparison();
   }, [activeUserBiz?.id]);
 
-  const [selectedIds, setSelectedIds] = useState<string[]>(["b1", "b2", "b3", "b4"]);
+  const [selectedIds, setSelectedIds] = useState<string[]>(() => {
+    return activeUserBiz?.id ? [activeUserBiz.id, "b1", "b2", "b4"] : ["b1", "b2", "b3", "b4"];
+  });
+
+  React.useEffect(() => {
+    if (activeUserBiz?.id) {
+      setSelectedIds((prev) => {
+        if (prev.includes(activeUserBiz.id)) return prev;
+        return [activeUserBiz.id, ...prev.filter((id) => id !== activeUserBiz.id).slice(0, 3)];
+      });
+    }
+  }, [activeUserBiz?.id]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const activeBiz = candidatePool.filter((b) => selectedIds.includes(b.id));

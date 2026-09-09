@@ -33,6 +33,7 @@ const STORAGE_KEYS = {
   PROFILES: "ventureroot_profiles",
   BUSINESSES: "ventureroot_businesses",
   AI_INSIGHTS: "ventureroot_ai_insights",
+  ACTIVE_BUSINESS_ID: "ventureroot_active_business_id",
 };
 
 // In-memory fallback for SSR or environments without localStorage
@@ -194,7 +195,35 @@ export const prototypeStorage = {
   getBusinesses(userId?: string): PrototypeBusiness[] {
     const all = parseJSON<PrototypeBusiness[]>(getItem(STORAGE_KEYS.BUSINESSES), []);
     if (!userId) return all;
-    return all.filter((b) => b.userId === userId);
+    const userSpecific = all.filter((b) => b.userId === userId);
+    if (userSpecific.length > 0) return userSpecific;
+    // Fallback: if user ID differs or is guest, return all stored businesses so session never loses business context
+    return all;
+  },
+
+  getActiveBusinessId(): string | null {
+    const activeId = getItem(STORAGE_KEYS.ACTIVE_BUSINESS_ID);
+    if (activeId) {
+      const exists = this.getBusinessById(activeId);
+      if (exists) return exists.id;
+    }
+    const current = this.getCurrentUser();
+    const businesses = this.getBusinesses(current?.id);
+    return businesses[0]?.id || null;
+  },
+
+  getActiveBusiness(): PrototypeBusiness | null {
+    const activeId = this.getActiveBusinessId();
+    if (activeId) return this.getBusinessById(activeId);
+    return null;
+  },
+
+  setActiveBusinessId(businessId: string): void {
+    setItem(STORAGE_KEYS.ACTIVE_BUSINESS_ID, businessId);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("ventureroot_business_updated", { detail: { id: businessId } }));
+      window.dispatchEvent(new Event("storage"));
+    }
   },
 
   getBusinessById(id: string): PrototypeBusiness | null {
@@ -241,6 +270,13 @@ export const prototypeStorage = {
     }
 
     setItem(STORAGE_KEYS.BUSINESSES, JSON.stringify(all));
+    setItem(STORAGE_KEYS.ACTIVE_BUSINESS_ID, businessRecord.id);
+
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("ventureroot_business_updated", { detail: businessRecord }));
+      window.dispatchEvent(new Event("storage"));
+    }
+
     return businessRecord;
   },
 

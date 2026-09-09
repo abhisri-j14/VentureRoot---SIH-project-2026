@@ -356,52 +356,80 @@ export const BusinessDetailsView = () => {
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between mb-2">
               <h2 className="font-sans text-[11px] font-bold uppercase tracking-wider text-black-500">
-                Next Steps
+                Action Workstreams
               </h2>
-              <span className="font-sans text-[11px] font-medium text-slate-500">4 Workstreams</span>
+              <span className="font-sans text-[11px] font-medium text-slate-500">5 Live Tools</span>
             </div>
 
             <div className="flex flex-col gap-3 h-full">
+              {/* Feasibility */}
+              <Link href={`/business/${business.id}/feasibility`} className="group flex items-center justify-between p-3.5 rounded-2xl transition-all shadow-sm bg-[#1E6702] hover:bg-[#154a01] flex-1">
+                <div className="flex items-center gap-3.5">
+                  <div className="p-2 bg-white/20 rounded-xl group-hover:scale-110 transition-transform">
+                    <ShieldAlert className="w-5 h-5 text-[#FFFBE7]" />
+                  </div>
+                  <div className="flex flex-col text-left gap-0.5">
+                    <span className="font-sans text-[15px] font-bold text-[#FFFBE7]">AI Feasibility</span>
+                    <span className="font-sans text-[11px] text-[#FFFBE7]/80 font-medium">Market demand, SWOT & APMC scan</span>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-[#FFFBE7]/50 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              {/* Finance */}
+              <Link href={`/business/${business.id}/finance`} className="group flex items-center justify-between p-3.5 rounded-2xl transition-all shadow-sm bg-[#567a59] hover:bg-[#436246] flex-1">
+                <div className="flex items-center gap-3.5">
+                  <div className="p-2 bg-white/20 rounded-xl group-hover:scale-110 transition-transform">
+                    <TrendingUp className="w-5 h-5 text-[#FFFBE7]" />
+                  </div>
+                  <div className="flex flex-col text-left gap-0.5">
+                    <span className="font-sans text-[15px] font-bold text-[#FFFBE7]">Financial Plan</span>
+                    <span className="font-sans text-[11px] text-[#FFFBE7]/80 font-medium">PMEGP subsidies, EMI & cash flow</span>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-[#FFFBE7]/50 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              {/* Roadmap */}
+              <Link href={`/business/${business.id}/roadmap`} className="group flex items-center justify-between p-3.5 rounded-2xl transition-all shadow-sm bg-[#5f9ea0] hover:bg-[#4c8486] flex-1">
+                <div className="flex items-center gap-3.5">
+                  <div className="p-2 bg-[#eff5df]/20 rounded-xl group-hover:scale-110 transition-transform">
+                    <Compass className="w-5 h-5 text-[#eff5df]" />
+                  </div>
+                  <div className="flex flex-col text-left gap-0.5">
+                    <span className="font-sans text-[15px] font-bold text-[#eff5df]">Roadmap</span>
+                    <span className="font-sans text-[11px] text-[#eff5df]/80 font-medium">Execution milestones & timeline</span>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-[#eff5df]/50 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
               {/* Compare */}
-              <Link href={`/business/compare`} className="group flex items-center justify-between p-4 rounded-2xl transition-all shadow-sm bg-[#234670] hover:bg-[#234670]/90 flex-1">
-                <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-[#f2f5d0]/10 rounded-xl group-hover:scale-110 transition-transform">
+              <Link href={`/business/compare`} className="group flex items-center justify-between p-3.5 rounded-2xl transition-all shadow-sm bg-[#234670] hover:bg-[#1a3554] flex-1">
+                <div className="flex items-center gap-3.5">
+                  <div className="p-2 bg-[#f2f5d0]/10 rounded-xl group-hover:scale-110 transition-transform">
                     <BarChart2 className="w-5 h-5 text-[#f2f5d0]" />
                   </div>
                   <div className="flex flex-col text-left gap-0.5">
-                    <span className="font-sans text-[16px] font-bold text-[#f2f5d0]">Compare</span>
-                    <span className="font-sans text-[12px] text-[#f2f5d0]/80 font-medium">Compare multiple businesses</span>
+                    <span className="font-sans text-[15px] font-bold text-[#f2f5d0]">Compare</span>
+                    <span className="font-sans text-[11px] text-[#f2f5d0]/80 font-medium">Benchmark against rural enterprises</span>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-[#f2f5d0]/50 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               {/* Reports */}
-              <Link href={`/reports`} className="group flex items-center justify-between p-4 rounded-2xl transition-all shadow-sm bg-[#301608] hover:bg-[#301608]/90 flex-1">
-                <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-[#f9fadc]/10 rounded-xl group-hover:scale-110 transition-transform">
+              <Link href={`/reports/${business.id}`} className="group flex items-center justify-between p-3.5 rounded-2xl transition-all shadow-sm bg-[#301608] hover:bg-[#200e05] flex-1">
+                <div className="flex items-center gap-3.5">
+                  <div className="p-2 bg-[#f9fadc]/10 rounded-xl group-hover:scale-110 transition-transform">
                     <FileText className="w-5 h-5 text-[#f9fadc]" />
                   </div>
                   <div className="flex flex-col text-left gap-0.5">
-                    <span className="font-sans text-[16px] font-bold text-[#f9fadc]">Get Reports</span>
-                    <span className="font-sans text-[12px] text-[#f9fadc]/80 font-medium">Detailed Project Report ready</span>
+                    <span className="font-sans text-[15px] font-bold text-[#f9fadc]">Detailed Project Report</span>
+                    <span className="font-sans text-[11px] text-[#f9fadc]/80 font-medium">Bankable PDF & full advisory document</span>
                   </div>
                 </div>
                 <ChevronRight className="w-5 h-5 text-[#f9fadc]/50 group-hover:translate-x-1 transition-transform" />
-              </Link>
-
-              {/* Roadmap */}
-              <Link href={`/business/${business.id}/roadmap`} className="group flex items-center justify-between p-4 rounded-2xl transition-all shadow-sm bg-[#5f9ea0] hover:bg-[#5f9ea0]/90 flex-1">
-                <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-[#eff5df]/20 rounded-xl group-hover:scale-110 transition-transform">
-                    <Compass className="w-5 h-5 text-[#eff5df]" />
-                  </div>
-                  <div className="flex flex-col text-left gap-0.5">
-                    <span className="font-sans text-[16px] font-bold text-[#eff5df]">Roadmap</span>
-                    <span className="font-sans text-[12px] text-[#eff5df]/80 font-medium">Phase 1 of 4 in progress</span>
-                  </div>
-                </div>
-                <ChevronRight className="w-5 h-5 text-[#eff5df]/50 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>

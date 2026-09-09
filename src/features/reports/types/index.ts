@@ -18,6 +18,18 @@ export interface Report {
   createdAt: string;
   type: string;
   
-  // To simulate the detail view using existing mock structures:
+  // Dynamic business financial parameters
+  capital?: {
+    availableMargin: number;
+    workingCapital?: number;
+    expectedInvestment: number;
+  };
+  operations?: {
+    expectedRevenue: number;
+    expectedPrice?: number;
+    productionQuantity?: number;
+  };
+
+  // Feasibility dataset
   feasibilityData?: FeasibilityData;
 }

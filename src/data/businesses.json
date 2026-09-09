@@ -1,6 +1,125 @@
 {
   "items": [
     {
+      "id": "biz_1788969909118_cypq9",
+      "userId": "usr_demo_rajesh",
+      "name": "Handloom & Banarasi Weaving Enterprise",
+      "businessName": "Handloom & Banarasi Weaving Enterprise",
+      "category": "Handloom & Banarasi Weaving",
+      "subcategory": "",
+      "description": "Micro-enterprise plan.",
+      "stage": "Ideation",
+      "status": "Ready",
+      "location": {
+        "state": "West bengal",
+        "district": "Howrah"
+      },
+      "capital": {
+        "availableMargin": 500000,
+        "workingCapital": 175000,
+        "expectedInvestment": 1250000
+      },
+      "operations": {
+        "expectedRevenue": 200000,
+        "expectedPrice": 75,
+        "productionQuantity": 100
+      },
+      "resources": {
+        "existingResources": "Skills: Sales",
+        "land": "Local premises",
+        "equipment": "Essential processing equipment"
+      },
+      "createdAt": "2026-09-09T16:05:09.119Z",
+      "updatedAt": "2026-09-09T16:08:44.107Z",
+      "briefing": {
+        "headline": "Weave your heritage into a thriving digital-first enterprise today!",
+        "readinessAssessment": "With ₹5,00,000 in capital, you have a solid foundation to scale your production and upgrade traditional designs for modern markets.",
+        "priorityAction": "Finalize your direct-to-consumer online catalog and photograph your top 10 signature Banarasi pieces for digital marketing.",
+        "schemeHighlight": "National Handloom Development Programme (NHDP) for financial assistance on modern looms and skill training.",
+        "riskAdvisory": "Ensure strict quality control and diversify your supply chain to protect against sudden fluctuations in raw silk prices."
+      },
+      "roadmap": {
+        "id": "roadmap_1788970123990",
+        "businessId": "biz_1788969909118_cypq9",
+        "businessName": "Handloom & Banarasi Weaving Enterprise",
+        "location": "Howrah, West bengal",
+        "actions": [
+          {
+            "id": "act-1",
+            "order": 1,
+            "title": "Weaving Skill Acquisition & Artisan Partnership",
+            "description": "Since you have general experience and no prior handloom background, partner with skilled local weavers in Howrah or nearby weaving clusters like Santipur/Phulia for production expertise.",
+            "whatToDo": "Identify and onboard 2-3 experienced traditional weavers on a contract or wage basis to oversee the technical Banarasi/handloom production side.",
+            "expectedOutcome": "Secured technical workforce to ensure authentic product quality matching market standards.",
+            "timeframe": "Weeks 1-3",
+            "priority": "HIGH",
+            "category": "OPERATIONS",
+            "status": "NOT_STARTED"
+          },
+          {
+            "id": "act-2",
+            "order": 2,
+            "title": "Budget Allocation & PMEGP/MUDRA Loan Application",
+            "description": "Prepare a Detailed Project Report (DPR) utilizing your ₹5,00,000 capital as margin money and apply for financial assistance via PMEGP or MUDRA scheme.",
+            "whatToDo": "Visit the District Industries Centre (DIC) in Howrah or apply online via the KVIC portal to submit your project proposal for loom setup and working capital.",
+            "expectedOutcome": "Sanction of credit-linked subsidy or business loan to expand purchasing power beyond initial capital.",
+            "timeframe": "Weeks 3-6",
+            "priority": "HIGH",
+            "category": "FINANCE",
+            "status": "NOT_STARTED"
+          },
+          {
+            "id": "act-3",
+            "order": 3,
+            "title": "Raw Material Sourcing & Loom Setup",
+            "description": "Procure quality silk yarn, zari, and basic handloom pit-looms or frame-looms within the available capital limits.",
+            "whatToDo": "Establish contacts with reliable raw material suppliers from Bhagalpur or Varanasi for silk/zari and set up the workspace in a rented shed or home setup in Howrah.",
+            "expectedOutcome": "Operational weaving unit with necessary raw inventory ready for the first production cycle.",
+            "timeframe": "Weeks 5-8",
+            "priority": "HIGH",
+            "category": "SUPPLY",
+            "status": "NOT_STARTED"
+          },
+          {
+            "id": "act-4",
+            "order": 4,
+            "title": "Legal Registration & Weaving Certifications",
+            "description": "Complete mandatory business registrations and secure authenticity markers for handloom products.",
+            "whatToDo": "Register for MSME (Udyam), obtain GSTIN, and apply for the India Handloom Brand (IHB) tag or Handloom Weavers Weaver Photo Identity Card through the Office of the Development Commissioner (Handlooms).",
+            "expectedOutcome": "Legal compliance and trust-building certifications for authentic handloom marketing.",
+            "timeframe": "Weeks 7-9",
+            "priority": "HIGH",
+            "category": "COMPLIANCE",
+            "status": "NOT_STARTED"
+          },
+          {
+            "id": "act-5",
+            "order": 5,
+            "title": "B2B and Local Market Linkages",
+            "description": "Establish distribution channels targeting local Howrah and Kolkata textile markets, ethnic stores, and cooperative societies.",
+            "whatToDo": "Visit Burrabazar textile hub in Kolkata to showcase sample sarees and dupattas, and negotiate wholesale supply terms with local vendors.",
+            "expectedOutcome": "Initial wholesale orders and fixed B2B buyers to ensure consistent cash flow.",
+            "timeframe": "Weeks 9-11",
+            "priority": "HIGH",
+            "category": "MARKET",
+            "status": "NOT_STARTED"
+          },
+          {
+            "id": "act-6",
+            "order": 6,
+            "title": "Digital Cataloging & E-Commerce Onboarding",
+            "description": "Take high-resolution photographs of the woven products and launch a digital storefront to tap into broader markets.",
+            "whatToDo": "Register seller accounts on e-commerce platforms like ONDC, Amazon Karigar, or create an Instagram/WhatsApp business catalog for direct-to-consumer (D2C) sales.",
+            "expectedOutcome": "Active online presence enabling broader market reach beyond local Howrah boundaries.",
+            "timeframe": "Weeks 11-12",
+            "priority": "MEDIUM",
+            "category": "MARKETING",
+            "status": "NOT_STARTED"
+          }
+        ]
+      }
+    },
+    {
       "id": "biz_1788969218873_rqo65",
       "userId": "usr_demo_rajesh",
       "name": "My Rural Enterprise",

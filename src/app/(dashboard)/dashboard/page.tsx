@@ -63,6 +63,7 @@ const headerVariants = {
 };
 
 import { useBusinessesComparison } from "@/lib/data/businesses";
+import { prototypeStorage } from "@/lib/storage/prototypeStorage";
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -78,7 +79,25 @@ export default function DashboardPage() {
 
   const { data: profileData } = useProfile();
   const { data: businesses, isLoading: isBusinessesLoading } = useBusinessesComparison();
-  const activeBusiness = businesses?.[0];
+  const [activeBiz, setActiveBiz] = useState<any>(null);
+
+  useEffect(() => {
+    const resolveActive = () => {
+      const stored = prototypeStorage.getActiveBusiness();
+      const current = businesses?.[0] || stored;
+      setActiveBiz(current);
+    };
+    resolveActive();
+
+    window.addEventListener("ventureroot_business_updated", resolveActive);
+    window.addEventListener("storage", resolveActive);
+    return () => {
+      window.removeEventListener("ventureroot_business_updated", resolveActive);
+      window.removeEventListener("storage", resolveActive);
+    };
+  }, [businesses]);
+
+  const activeBusiness = businesses?.[0] || activeBiz;
 
   const firstName =
     profileData?.fullName?.split(" ")[0] ||
@@ -194,7 +213,7 @@ export default function DashboardPage() {
       </motion.div>
 
       {/* Welcome Onboarding Banner if no business created yet */}
-      {!hasBusiness && (
+      {!hasBusiness ? (
         <motion.div
           variants={cardVariants}
           initial="hidden"
@@ -218,6 +237,40 @@ export default function DashboardPage() {
             <span>Setup Business</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
+        </motion.div>
+      ) : (
+        <motion.div
+          variants={cardVariants}
+          initial="hidden"
+          animate="visible"
+          className="p-5 bg-[#1f3f22] text-[#f9faeb] rounded-2xl shadow-lg border border-[#2d5c32] flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
+        >
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[11px] uppercase font-bold tracking-wider text-emerald-300">Active Enterprise Modeled</span>
+            </div>
+            <h3 className="font-heading text-[20px] font-bold text-white">{activeBusiness.name}</h3>
+            <p className="text-[#f9faeb]/80 text-xs max-w-2xl font-sans leading-relaxed">
+              Category: {activeBusiness.category} • Location: {activeBusiness.location?.district || "Region"}, {activeBusiness.location?.state || "State"} • Capital: ₹{(activeBusiness.capital?.availableMargin || 0).toLocaleString("en-IN")}
+            </p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0 flex-wrap">
+            <Link
+              href={`/business/${activeBusiness.id}/feasibility`}
+              className="px-4 py-2 bg-[#81cc87] hover:bg-[#6ebb74] text-[#1a3d24] font-bold rounded-xl shadow-md transition-all flex items-center gap-1.5 text-xs"
+            >
+              <span>AI Feasibility</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <Link
+              href={`/business/${activeBusiness.id}/finance`}
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl border border-white/20 transition-all flex items-center gap-1.5 text-xs"
+            >
+              <span>Finance Model</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </motion.div>
       )}
 
@@ -269,8 +322,17 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="text-center w-full">
-                <span className={`${classes.supportingText} font-bold block mb-0.5 text-[#242424]`}>Good viability</span>
-                <span className={classes.smallSupporting}>Mock data · ML integration pending</span>
+                <span className={`${classes.supportingText} font-bold block mb-0.5 text-[#242424]`}>
+                  {activeBusiness ? "Viability Evaluated" : "Good viability"}
+                </span>
+                <Link
+                  href={activeBusiness?.id ? `/business/${activeBusiness.id}/feasibility` : "/business/create"}
+                  className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#1E6702] hover:underline mt-1"
+                >
+                  <span>{activeBusiness ? "View AI Feasibility" : "Setup Enterprise"}</span>
+                  <ArrowRight className="w-3 h-3" />
+                </Link>
+                <span className={classes.smallSupporting}> · ML integration pending</span>
               </div>
             </div>
           </motion.div>
