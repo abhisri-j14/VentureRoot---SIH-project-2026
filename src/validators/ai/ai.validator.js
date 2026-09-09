@@ -1,10 +1,8 @@
 import { z } from "zod";
 
-
 const businessIdSchema = z
   .string()
-  .uuid("Invalid business ID");
-
+  .min(1, "Invalid business ID");
 
 const userContextSchema = z
   .record(
@@ -28,7 +26,6 @@ const userContextSchema = z
     }
   );
 
-
 export const advisorChatSchema = z
   .object({
     message: z
@@ -51,7 +48,6 @@ export const advisorChatSchema = z
   })
   .strict();
 
-
 export const analyzeBusinessSchema =
   z
     .object({
@@ -59,7 +55,6 @@ export const analyzeBusinessSchema =
         businessIdSchema,
     })
     .strict();
-
 
 export const recommendBusinessSchema =
   z

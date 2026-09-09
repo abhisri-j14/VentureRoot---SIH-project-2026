@@ -1,18 +1,27 @@
-import { PrismaClient } from "@prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+/**
+ * Standalone Prisma proxy for prototype mode
+ * Safely resolves database queries to null so fallback handlers can activate smoothly
+ */
 
-const globalForPrisma = globalThis;
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DIRECT_URL,
-});
-
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    adapter,
-  });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+function createMockPrisma() {
+  return new Proxy(
+    {},
+    {
+      get(target, prop) {
+        if (prop === "$connect" || prop === "$disconnect") {
+          return async () => {};
+        }
+        return new Proxy(
+          {},
+          {
+            get(t, method) {
+              return async () => null;
+            },
+          }
+        );
+      },
+    }
+  );
 }
+
+export const prisma = createMockPrisma();

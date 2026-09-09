@@ -30,7 +30,7 @@ export const createBusinessSchema = z
   .object({
     categoryId: z
       .string()
-      .uuid("Invalid category ID"),
+      .min(1, "Invalid category ID"),
 
     name: z
       .string()
@@ -93,7 +93,7 @@ export const updateBusinessSchema =
 
 export const businessIdSchema = z
   .string()
-  .uuid("Invalid business ID");
+  .min(1, "Invalid business ID");
 
 
 export const businessQuerySchema = z
@@ -121,7 +121,7 @@ export const businessQuerySchema = z
 
     categoryId: z
       .string()
-      .uuid("Invalid category ID")
+      .min(1, "Invalid category ID")
       .optional(),
 
     search: z

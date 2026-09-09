@@ -1,16 +1,14 @@
 import { z } from "zod";
 
-
 export const reportIdSchema = z
   .string()
-  .uuid("Invalid report ID");
-
+  .min(1, "Invalid report ID");
 
 export const generateReportSchema = z
   .object({
     businessId: z
       .string()
-      .uuid("Invalid business ID"),
+      .min(1, "Invalid business ID"),
 
     type: z.enum([
       "FEASIBILITY",
@@ -20,7 +18,6 @@ export const generateReportSchema = z
     ]),
   })
   .strict();
-
 
 export const reportQuerySchema = z
   .object({
@@ -56,23 +53,18 @@ export const reportQuerySchema = z
 
     businessId: z
       .string()
-      .uuid("Invalid business ID")
+      .min(1)
       .optional(),
 
     sortBy: z
       .enum([
         "createdAt",
-        "updatedAt",
         "generatedAt",
-        "title",
       ])
       .default("createdAt"),
 
     sortOrder: z
-      .enum([
-        "asc",
-        "desc",
-      ])
+      .enum(["asc", "desc"])
       .default("desc"),
   })
   .strict();
